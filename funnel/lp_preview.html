@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>経営者の月30時間を、AIで取り戻す｜AIチーフ・オブ・スタッフ実装ライブ</title>
+<meta name="description" content="VSCode恐怖症の経営者でも腑に落ちる120分のデモ。議事録・朝のブリーフ・コンテンツ展開を目の前で実演します。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF6;
+    --bg-alt: #F1EFE8;
+    --bg-dark: #15202B;
+    --text: #15202B;
+    --text-soft: #4A5660;
+    --text-muted: #8B939B;
+    --accent: #1E3A5F;
+    --accent-warm: #B8915A;
+    --line: #E0DDD3;
+    --highlight: #FFEFB8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans JP', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .serif {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .container {
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ========== Header ========== */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250, 250, 246, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .logo {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 900;
+    font-size: 17px;
+    letter-spacing: 0.02em;
+  }
+  .logo span { color: var(--accent-warm); }
+  .header-cta {
+    background: var(--text);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: opacity 0.2s;
+  }
+  .header-cta:hover { opacity: 0.85; }
+
+  /* ========== Hero ========== */
+  .hero {
+    padding: 80px 0 100px;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(184, 145, 90, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: white;
+    border: 1px solid var(--line);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-soft);
+    margin-bottom: 32px;
+    letter-spacing: 0.03em;
+  }
+  .hero-tag::before {
+    content: "● ";
+    color: var(--accent-warm);
+    font-size: 10px;
+  }
+  .hero h1 {
+    font-size: clamp(32px, 5.5vw, 56px);
+    font-weight: 900;
+    margin-bottom: 28px;
+    color: var(--text);
+  }
+  .hero h1 .accent {
+    color: var(--accent-warm);
+    border-bottom: 4px solid var(--accent-warm);
+    padding-bottom: 4px;
+  }
+  .hero h1 .small {
+    display: block;
+    font-size: 0.55em;
+    margin-top: 16px;
+    color: var(--text-soft);
+    font-weight: 500;
+  }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-soft);
+    max-width: 640px;
+    margin-bottom: 40px;
+  }
+  .hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-bottom: 48px;
+    padding: 28px 32px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .hero-stat-item {
+    flex: 1 1 auto;
+  }
+  .hero-stat-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .hero-stat-num small { font-size: 18px; font-weight: 700; color: var(--text-soft); margin-left: 2px; }
+  .hero-stat-label {
+    font-size: 13px;
+    color: var(--text-soft);
+  }
+  .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--text);
+    color: white;
+    padding: 18px 40px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 0 0 var(--accent-warm);
+  }
+  .cta-primary:hover { transform: translateY(-1px); box-shadow: 0 5px 0 0 var(--accent-warm); }
+  .cta-primary::after { content: "→"; font-size: 18px; }
+  .cta-meta {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ========== Section base ========== */
+  section { padding: 100px 0; }
+  .section-tag {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--accent-warm);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .section-title {
+    font-size: clamp(26px, 3.5vw, 40px);
+    margin-bottom: 24px;
+  }
+  .section-lead {
+    font-size: 17px;
+    color: var(--text-soft);
+    max-width: 720px;
+    margin-bottom: 48px;
+  }
+
+  /* ========== Problem section ========== */
+  .problem-section { background: white; }
+  .pain-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+  .pain-card {
+    border: 1px solid var(--line);
+    background: var(--bg);
+    padding: 32px 28px;
+    border-radius: 8px;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .pain-card:hover {
+    border-color: var(--accent-warm);
+    transform: translateY(-2px);
+  }
+  .pain-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-warm);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .pain-card h3 {
+    font-size: 19px;
+    margin-bottom: 12px;
+  }
+  .pain-card p {
+    font-size: 15px;
+    color: var(--text-soft);
+  }
+  .pain-card .pain-time {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 13px;
+    background: var(--highlight);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .pain-summary {
+    margin-top: 56px;
+    padding: 32px;
+    background: var(--text);
+    color: white;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .pain-summary strong {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(22px, 3vw, 30px);
+    color: white;
+  }
+  .pain-summary strong .yellow { color: #FFD84D; }
+
+  /* ========== Solution section ========== */
+  .solution-section { background: var(--bg-alt); }
+  .solution-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 48px 0;
+  }
+  .option-card {
+    background: white;
+    padding: 28px 20px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--line);
+  }
+  .option-card.highlight {
+    background: var(--text);
+    color: white;
+    border-color: var(--text);
+    transform: scale(1.05);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+  }
+  .option-card.highlight .option-num {
+    background: var(--accent-warm);
+    color: white;
+  }
+  .option-num {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    background: var(--bg-alt);
+    color: var(--text);
+    border-radius: 50%;
+    font-weight: 700;
+    margin-bottom: 16px;
+    font-size: 13px;
+  }
+  .option-title {
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 16px;
+  }
+  .option-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .option-card.highlight .option-desc { color: rgba(255,255,255,0.7); }
+
+  .solution-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-top: 48px;
+  }
+  .feature-item h4 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    margin-bottom: 12px;
+    color: var(--accent);
+  }
+  .feature-item h4 .num {
+    color: var(--accent-warm);
+    margin-right: 8px;
+  }
+  .feature-item p {
+    font-size: 14px;
+    color: var(--text-soft);
+  }
+
+  /* ========== Demo section ========== */
+  .demo-section { background: white; }
+  .demo-list { margin-top: 48px; }
+  .demo-card {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 48px;
+    padding: 48px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .demo-card:last-child { border-bottom: none; }
+  .demo-visual {
+    background: var(--bg-dark);
+    border-radius: 8px;
+    padding: 24px;
+    color: #C0E2FF;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+  .demo-visual .prompt { color: #FFD84D; }
+  .demo-visual .out { color: #B8E8C4; }
+  .demo-visual .hash { color: #A89BC4; font-weight: 700; }
+  .demo-visual .dim { color: #5A6975; }
+  .demo-visual .bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .demo-visual .bar span {
+    width: 10px; height: 10px; border-radius: 50%; background: #4A5660;
+  }
+  .demo-visual .bar span:first-child { background: #FF5F57; }
+  .demo-visual .bar span:nth-child(2) { background: #FFBD2E; }
+  .demo-visual .bar span:nth-child(3) { background: #28CA42; }
+
+  .demo-info .demo-tag {
+    color: var(--accent-warm);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .demo-info h3 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  .demo-info p {
+    font-size: 15px;
+    color: var(--text-soft);
+    margin-bottom: 16px;
+  }
+  .demo-info .demo-result {
+    display: inline-block;
+    background: var(--bg-alt);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .demo-info .demo-result strong { color: var(--accent); }
+
+  /* ========== Speaker section ========== */
+  .speaker-section { background: var(--bg-alt); }
+  .speaker-card {
+    background: white;
+    padding: 48px;
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 48px;
+    align-items: start;
+    border: 1px solid var(--line);
+  }
+  .speaker-photo {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-warm) 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .speaker-info h3 {
+    font-size: 26px;
+    margin-bottom: 4px;
+  }
+  .speaker-role {
+    color: var(--accent-warm);
+    font-weight: 700;
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
+  .speaker-info p {
+    color: var(--text-soft);
+    margin-bottom: 16px;
+  }
+
+  /* ========== Event details / Form ========== */
+  .event-section {
+    background: var(--text);
+    color: white;
+  }
+  .event-section .section-title { color: white; }
+  .event-section .section-lead { color: rgba(255,255,255,0.75); }
+
+  .event-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin-top: 48px;
+  }
+
+  .event-details {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 32px;
+  }
+  .event-details dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px 24px;
+  }
+  .event-details dt {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .event-details dd {
+    color: white;
+    font-weight: 500;
+  }
+  .event-details dd .price {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: #FFD84D;
+  }
+  .event-details dd .price small {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    margin-left: 6px;
+  }
+
+  /* Form */
+  .signup-form {
+    background: white;
+    color: var(--text);
+    padding: 32px;
+    border-radius: 8px;
+  }
+  .signup-form h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .signup-form .form-lead {
+    font-size: 13px;
+    color: var(--text-soft);
+    margin-bottom: 24px;
+  }
+  .form-row {
+    margin-bottom: 16px;
+  }
+  .form-row label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text-soft);
+  }
+  .form-row label .required {
+    color: #C04848;
+    margin-left: 4px;
+    font-size: 11px;
+  }
+  .form-row input,
+  .form-row select,
+  .form-row textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    background: var(--bg);
+    transition: border-color 0.2s;
+  }
+  .form-row input:focus,
+  .form-row select:focus,
+  .form-row textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: white;
+  }
+  .form-row textarea { resize: vertical; min-height: 80px; }
+  .form-submit {
+    width: 100%;
+    background: var(--text);
+    color: white;
+    padding: 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 12px;
+    font-family: inherit;
+    transition: opacity 0.15s;
+  }
+  .form-submit:hover { opacity: 0.85; }
+  .form-note {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  /* ========== FAQ ========== */
+  .faq-section { background: white; }
+  .faq-list {
+    margin-top: 48px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-q {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 24px 0;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: inherit;
+    color: var(--text);
+  }
+  .faq-q::after {
+    content: "+";
+    font-size: 22px;
+    color: var(--accent-warm);
+    transition: transform 0.2s;
+  }
+  .faq-item.open .faq-q::after {
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    color: var(--text-soft);
+    font-size: 15px;
+  }
+  .faq-item.open .faq-a {
+    max-height: 400px;
+    padding: 0 0 24px;
+  }
+
+  /* ========== Final CTA ========== */
+  .final-cta {
+    background: linear-gradient(135deg, var(--bg-alt) 0%, var(--bg) 100%);
+    padding: 120px 0;
+    text-align: center;
+  }
+  .final-cta h2 {
+    font-size: clamp(28px, 4vw, 44px);
+    margin-bottom: 24px;
+  }
+  .final-cta p {
+    font-size: 17px;
+    color: var(--text-soft);
+    max-width: 560px;
+    margin: 0 auto 40px;
+  }
+
+  /* ========== Footer ========== */
+  footer {
+    background: var(--text);
+    color: rgba(255,255,255,0.6);
+    padding: 48px 0;
+    font-size: 13px;
+  }
+  footer .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  footer a { color: rgba(255,255,255,0.6); margin-left: 24px; }
+  footer a:hover { color: white; }
+
+  /* ========== Mobile ========== */
+  @media (max-width: 768px) {
+    .hero { padding: 56px 0 72px; }
+    .hero-stats { flex-direction: column; gap: 20px; padding: 24px; }
+    .pain-list { grid-template-columns: 1fr; }
+    .solution-options { grid-template-columns: repeat(2, 1fr); }
+    .option-card.highlight { transform: scale(1); }
+    .solution-features { grid-template-columns: 1fr; gap: 24px; }
+    .demo-card { grid-template-columns: 1fr; gap: 24px; padding: 32px 0; }
+    .speaker-card { grid-template-columns: 1fr; gap: 24px; padding: 32px; text-align: center; }
+    .speaker-photo { margin: 0 auto; width: 160px; height: 160px; }
+    .event-grid { grid-template-columns: 1fr; gap: 32px; }
+    section { padding: 64px 0; }
+    .header-cta { padding: 8px 14px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== Header ========== -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">AI Chief of Staff <span>Lab.</span></a>
+    <a href="#signup" class="header-cta">参加を申し込む</a>
+  </div>
+</header>
+
+<!-- ========== Hero ========== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-tag">経営者・意思決定層 限定｜120分オンラインライブ</div>
+    <h1>
+      経営者の<span class="accent">月30時間</span>を、<br>
+      AIで取り戻す。
+      <span class="small">VSCode恐怖症の経営者でも腑に落ちる、AIチーフ・オブ・スタッフ実装ライブ</span>
+    </h1>
+    <p class="hero-sub">
+      プログラミング知識は不要です。必要なのは、あなたが普段、部下に指示を出している、その能力だけ。<br>
+      議事録、朝の情報収集、発信のテキスト化──月30時間奪っているこれらを、目の前で消してみせます。
+    </p>
+
+    <div class="hero-stats">
+      <div class="hero-stat-item">
+        <div class="hero-stat-num">120<small>分</small></div>
+        <div class="hero-stat-label">ライブ実演＋Q&amp;A</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hero-stat-num">3<small>本</small></div>
+        <div class="hero-stat-label">経営者の業務を自動化するデモ</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hero-stat-num">¥10,000<small>税込</small></div>
+        <div class="hero-stat-label">β価格／次回以降は¥29,800</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hero-stat-num">30<small>名</small></div>
+        <div class="hero-stat-label">先着限定／残り枠わずか</div>
+      </div>
+    </div>
+
+    <a href="#signup" class="cta-primary">¥10,000で参加を申し込む</a>
+    <p class="cta-meta">申込後すぐにZoomリンクが届きます／開催3日前まで全額返金可</p>
+  </div>
+</section>
+
+<!-- ========== Problem ========== -->
+<section class="problem-section">
+  <div class="container">
+    <div class="section-tag">PROBLEM</div>
+    <h2 class="section-title">あなたは、こんな経営者ではありませんか？</h2>
+    <p class="section-lead">
+      経営者の "1日の中の90分" は、本来やる必要のない業務に消えています。
+      具体的にどこに時間が奪われているのか、4つの罠を見てください。
+    </p>
+
+    <div class="pain-list">
+      <div class="pain-card">
+        <div class="pain-num">罠 #01</div>
+        <h3>議事録と会議のフォローアップ</h3>
+        <p>1on1や役員会のあと、自分で議事録をまとめ直していませんか？録画はあるけど見直す時間がない、結局記憶頼り。</p>
+        <span class="pain-time">月10時間</span>
+      </div>
+      <div class="pain-card">
+        <div class="pain-num">罠 #02</div>
+        <h3>朝の脳の起動コスト</h3>
+        <p>スマホでニュース、Slack、メール、業界レポート…気づいたら15分。「今日は何を決めるんだっけ」を思い出すのにまた5分。</p>
+        <span class="pain-time">月7.5時間</span>
+      </div>
+      <div class="pain-card">
+        <div class="pain-num">罠 #03</div>
+        <h3>情報の散在と記憶頼り</h3>
+        <p>「あのクライアントの担当、誰だっけ」「3か月前に何を約束したっけ」を毎回検索。漏れが起きるたびに信用を削る。</p>
+        <span class="pain-time">月5〜8時間</span>
+      </div>
+      <div class="pain-card">
+        <div class="pain-num">罠 #04</div>
+        <h3>発信の停滞</h3>
+        <p>動画やPodcastは録っている。でも記事化に2〜3時間かかると思うと後回し。気づくと2か月発信していない。</p>
+        <span class="pain-time">機会損失計算不能</span>
+      </div>
+    </div>
+
+    <div class="pain-summary">
+      <strong>足し算すると、ほぼすべての経営者で<span class="yellow">月30時間以上</span>。<br>年間で営業日2か月分が、本来やる必要のない業務に消えています。</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Solution ========== -->
+<section class="solution-section">
+  <div class="container">
+    <div class="section-tag">SOLUTION</div>
+    <h2 class="section-title">4つ目の選択肢：AIチーフ・オブ・スタッフ</h2>
+    <p class="section-lead">
+      これまでの解決策は3つしかありませんでした。今、4つ目の選択肢が現実的になっています。
+    </p>
+
+    <div class="solution-options">
+      <div class="option-card">
+        <div class="option-num">1</div>
+        <div class="option-title">秘書を採用する</div>
+        <div class="option-desc">月30〜50万円＋教育コスト＋退職リスク</div>
+      </div>
+      <div class="option-card">
+        <div class="option-num">2</div>
+        <div class="option-title">業務をやめる</div>
+        <div class="option-desc">実際にはやめられない</div>
+      </div>
+      <div class="option-card">
+        <div class="option-num">3</div>
+        <div class="option-title">早起きして頑張る</div>
+        <div class="option-desc">持続不可能</div>
+      </div>
+      <div class="option-card highlight">
+        <div class="option-num">4</div>
+        <div class="option-title">AIチーフ・オブ・スタッフ</div>
+        <div class="option-desc">給与ゼロ／24時間稼働／引き継ぎ不要</div>
+      </div>
+    </div>
+
+    <div class="solution-features">
+      <div class="feature-item">
+        <h4><span class="num">01</span>覚え続ける</h4>
+        <p>あなたの会社・性格・好みを一度設定すれば毎回伝える必要がない。ChatGPTとの最大の差です。</p>
+      </div>
+      <div class="feature-item">
+        <h4><span class="num">02</span>連携する</h4>
+        <p>PC上のファイル・メール・カレンダーと連携。ブラウザの中だけで完結しないからこそ、業務に効きます。</p>
+      </div>
+      <div class="feature-item">
+        <h4><span class="num">03</span>得意技を持つ</h4>
+        <p>繰り返す業務はスキル化できる。1度作れば毎回同じ品質で実行されます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Demo ========== -->
+<section class="demo-section" id="demo">
+  <div class="container">
+    <div class="section-tag">LIVE DEMO</div>
+    <h2 class="section-title">120分でお見せする3つの実演</h2>
+    <p class="section-lead">
+      抽象論はゼロ。経営者本人の業務素材で、実際に動かして見せます。
+      チャットで「うちはこう変えたい」と書いていただければ、その場でカスタマイズ。
+    </p>
+
+    <div class="demo-list">
+      <!-- Demo 1 -->
+      <div class="demo-card">
+        <div class="demo-visual">
+          <div class="bar"><span></span><span></span><span></span></div>
+          <div><span class="dim">$</span> <span class="prompt">claude run meeting_summary</span></div>
+          <div class="dim">  reading 役員会_議事録.txt (8,234 chars)...</div>
+          <div class="dim">  applying CLAUDE.md preferences...</div>
+          <div>  ✓ done in <span style="color:#FFD84D;">87秒</span></div>
+          <br>
+          <div class="hash">## 決定事項</div>
+          <div class="out">- Q3予算修正（営業 +20%、開発 -10%）</div>
+          <div class="out">- 新規プロダクト〇〇のローンチ7月</div>
+          <div class="out">- 役員人事の検討を来月に持ち越し</div>
+          <br>
+          <div class="hash">## 次のアクション</div>
+          <div class="out">- 田中CFO: 修正予算案を6/15まで</div>
+          <div class="out">- 佐藤VP: 採用計画を6/20まで</div>
+          <br>
+          <div class="hash">## あなたが次に判断すべきこと</div>
+          <div class="out">- 役員人事のスケジュール</div>
+          <div class="out">- 新規プロダクトの責任者指名</div>
+        </div>
+        <div class="demo-info">
+          <div class="demo-tag">DEMO 01</div>
+          <h3>議事録から決定事項を90秒で抽出</h3>
+          <p>30分会議の文字起こし8,000字から、決定事項・次のアクション・あなたが判断すべきことを瞬時に抽出。</p>
+          <p>ポイントは "あなたが判断すべきこと" のセクション。CLAUDE.mdに「私は経営者なので、最後に必ず私の判断ポイントを抽出して」と書いてあるからです。</p>
+          <div class="demo-result">月10時間 → <strong>ほぼゼロ</strong></div>
+        </div>
+      </div>
+
+      <!-- Demo 2 -->
+      <div class="demo-card">
+        <div class="demo-visual">
+          <div class="bar"><span></span><span></span><span></span></div>
+          <div><span class="dim">$</span> <span class="prompt">claude run morning_brief</span></div>
+          <div class="dim">  fetching 5 sources...</div>
+          <div class="dim">  cross-referencing CLAUDE.md (your business)...</div>
+          <div>  ✓ done in <span style="color:#FFD84D;">62秒</span></div>
+          <br>
+          <div class="hash">## 今朝の3行サマリ</div>
+          <div class="out">SaaS市場でAI関連の資金調達が再加速。</div>
+          <div class="out">競合A社が新機能を発表（ノーコード連携）。</div>
+          <div class="out">国内エンプラ市場の購買意欲指数が改善。</div>
+          <br>
+          <div class="hash">## あなたの会社／競合への影響</div>
+          <div class="out">A社の機能は弊社の差別化を弱める可能性。</div>
+          <div class="out">→ 今日のロードマップMTGで議題化推奨。</div>
+          <br>
+          <div class="hash">## 今日の判断に効く1件</div>
+          <div class="out">14:00 投資家MTGに向けて、A社の動向を</div>
+          <div class="out">先回りして触れておく材料になります。</div>
+        </div>
+        <div class="demo-info">
+          <div class="demo-tag">DEMO 02</div>
+          <h3>朝のブリーフィングを1分で生成</h3>
+          <p>業界ニュース＋競合動向＋今日の判断材料を、あなたの事業文脈で要約。Claudeはあなたの会社をCLAUDE.mdから知っているので "経営者目線" で評価できます。</p>
+          <div class="demo-result">月7.5時間 → <strong>ほぼゼロ</strong></div>
+        </div>
+      </div>
+
+      <!-- Demo 3 -->
+      <div class="demo-card">
+        <div class="demo-visual">
+          <div class="bar"><span></span><span></span><span></span></div>
+          <div><span class="dim">$</span> <span class="prompt">claude run content_pipeline podcast_05.txt</span></div>
+          <div class="dim">  applying tone reference (3 past posts)...</div>
+          <div class="dim">  generating 4 outputs in parallel...</div>
+          <div>  ✓ done in <span style="color:#FFD84D;">2分18秒</span></div>
+          <br>
+          <div class="hash">## Generated</div>
+          <div class="out">✓ note記事 (2,340字 / 章立て4)</div>
+          <div class="out">✓ Xスレッド (7ポスト)</div>
+          <div class="out">✓ LinkedIn投稿 (680字)</div>
+          <div class="out">✓ 社内Slackサマリ (320字)</div>
+          <br>
+          <div class="dim">→ output saved to drafts/</div>
+          <div class="dim">→ tone matched to your past style</div>
+          <div class="dim">→ ready for review</div>
+        </div>
+        <div class="demo-info">
+          <div class="demo-tag">DEMO 03</div>
+          <h3>動画／音声を記事＋SNS3種類に展開</h3>
+          <p>20分のPodcastから、note記事・Xスレッド・LinkedIn・社内サマリを一気に生成。あなた本人の過去投稿を参照させているので、トーンが完全一致します。</p>
+          <div class="demo-result">2.5時間 → <strong>5分</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Speaker ========== -->
+<section class="speaker-section">
+  <div class="container">
+    <div class="section-tag">SPEAKER</div>
+    <h2 class="section-title">講師について</h2>
+
+    <div class="speaker-card">
+      <div class="speaker-photo">〇〇<br>〇〇</div>
+      <div class="speaker-info">
+        <h3>〇〇 〇〇</h3>
+        <div class="speaker-role">AI Chief of Staff Lab. 主宰</div>
+        <p>〇〇株式会社代表。Claude Codeを活用した経営者向けAI業務改善コンサルティングを行う。これまで〇〇名の経営者・意思決定層の業務自動化を支援。</p>
+        <p>自身も経営者として「月30時間問題」に直面し、Claude Codeで月〇〇時間を取り戻した経験から、同じ悩みを持つ経営者向けに体系化したプログラムを提供している。</p>
+        <p style="margin-top:24px;font-size:13px;">note：[URL] ／ X：[URL]</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Event details + Form ========== -->
+<section class="event-section" id="signup">
+  <div class="container">
+    <div class="section-tag" style="color:#FFD84D;">REGISTRATION</div>
+    <h2 class="section-title">開催概要・お申し込み</h2>
+    <p class="section-lead">参加費は¥10,000（β価格・税込）。次回以降は¥29,800に上がる予定です。</p>
+
+    <div class="event-grid">
+      <div class="event-details">
+        <dl>
+          <dt>開催日時</dt><dd>〇月〇日（〇）19:00〜21:00</dd>
+          <dt>所要時間</dt><dd>120分（休憩なし）</dd>
+          <dt>形式</dt><dd>Zoomオンライン（カメラON任意）</dd>
+          <dt>定員</dt><dd>30名（先着）</dd>
+          <dt>録画</dt><dd>あり／参加者には1か月間限定公開</dd>
+          <dt>持ち物</dt><dd>PCとメモ用紙のみ</dd>
+          <dt>参加費</dt><dd><span class="price">¥10,000<small>税込／β価格</small></span></dd>
+        </dl>
+      </div>
+
+      <form class="signup-form" onsubmit="event.preventDefault(); alert('（プレビュー画面です。Stripeへの遷移は本番LPで実装します。）');">
+        <h3>お申し込みフォーム</h3>
+        <p class="form-lead">送信後、Stripeで決済 → 確認メールが自動送信されます（1分）</p>
+
+        <div class="form-row">
+          <label>お名前 <span class="required">必須</span></label>
+          <input type="text" placeholder="山田 太郎" required>
+        </div>
+        <div class="form-row">
+          <label>メールアドレス <span class="required">必須</span></label>
+          <input type="email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-row">
+          <label>会社名／役職 <span class="required">必須</span></label>
+          <input type="text" placeholder="株式会社〇〇／代表取締役" required>
+        </div>
+        <div class="form-row">
+          <label>業種</label>
+          <select>
+            <option>選択してください</option>
+            <option>SaaS／IT</option>
+            <option>製造業</option>
+            <option>サービス業</option>
+            <option>士業／コンサル</option>
+            <option>その他</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>業務上の悩みTOP3（任意・デモ素材として活用）</label>
+          <textarea placeholder="例：議事録の整理に時間がかかる／朝の情報収集が散漫／発信のテキスト化が止まる"></textarea>
+        </div>
+
+        <button type="submit" class="form-submit">¥10,000で参加を申し込む →</button>
+        <p class="form-note">クレジットカード決済（Stripe）／領収書自動発行／開催3日前まで全額返金</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FAQ ========== -->
+<section class="faq-section">
+  <div class="container">
+    <div class="section-tag">FAQ</div>
+    <h2 class="section-title">よくある質問</h2>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">ITが苦手な経営者でも大丈夫ですか？</button>
+        <div class="faq-a"><p>はい、まったく問題ありません。受講者の7割はExcelの関数を書いたことがないレベルの方です。プログラミング経験は一切不要です。必要なのは、部下に指示を出すスキル＝経営者の本業です。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">ChatGPTを使っているのですが、何が違うのですか？</button>
+        <div class="faq-a"><p>ChatGPTは "1回1回の会話" の道具、Claude Codeは "あなたの会社・性格・好みを覚え続ける" 道具です。月30時間の差はそこから生まれます。当日のデモで具体的にお見せします。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">当日参加できなかった場合、録画は見られますか？</button>
+        <div class="faq-a"><p>はい、参加申込者には開催後24時間以内に録画リンクをお送りします。1か月間視聴可能です。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">参加後に追加の有料サービスのセールスはありますか？</button>
+        <div class="faq-a"><p>当日120分のうち、最後の20分で「AI顧問サービス」のご紹介と15分の無料個別診断のご案内をします。それ以外の100分は完全に実演とQ&Aです。希望されない方は最後の20分を聞かずに退出していただいて構いません。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">法人で経費精算したいのですが、領収書は出ますか？</button>
+        <div class="faq-a"><p>はい、Stripeから自動発行される領収書をお送りします。会社名で発行可能です。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">返金はできますか？</button>
+        <div class="faq-a"><p>開催3日前までのキャンセルは全額返金。それ以降は録画提供での対応とさせていただきます。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Final CTA ========== -->
+<section class="final-cta">
+  <div class="container">
+    <h2>30時間を取り戻すか、<br>来月も同じ業務に追われるか。</h2>
+    <p>今日このページを閉じても、明日からの業務は何も変わりません。120分後に景色を変えるかどうかを決められるのは、あなただけです。</p>
+    <a href="#signup" class="cta-primary">¥10,000で参加を申し込む</a>
+  </div>
+</section>
+
+<!-- ========== Footer ========== -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>© 2026 AI Chief of Staff Lab. All Rights Reserved.</div>
+      <div>
+        <a href="#">特定商取引法に基づく表記</a>
+        <a href="#">プライバシーポリシー</a>
+        <a href="#">お問い合わせ</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
