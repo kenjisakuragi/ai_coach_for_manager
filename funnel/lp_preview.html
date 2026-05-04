@@ -4,49 +4,56 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>経営者の月30時間を、AIで取り戻す｜AIチーフ・オブ・スタッフ実装ライブ</title>
-<meta name="description" content="VSCode恐怖症の経営者でも腑に落ちる120分のデモ。議事録・朝のブリーフ・コンテンツ展開を目の前で実演します。">
+<meta name="description" content="文系経営者でも腑に落ちる120分のデモ。議事録・朝のブリーフ・コンテンツ展開を目の前で実演します。プログラミング知識は一切不要。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #FAFAF6;
-    --bg-alt: #F1EFE8;
-    --bg-dark: #15202B;
-    --text: #15202B;
-    --text-soft: #4A5660;
-    --text-muted: #8B939B;
+    --bg: #FBF9F4;
+    --bg-alt: #F3EFE5;
+    --bg-warm: #FAF1DD;
+    --paper: #FFFFFF;
+    --ink: #1B2530;
+    --ink-soft: #4D5862;
+    --ink-mute: #8A929A;
     --accent: #1E3A5F;
     --accent-warm: #B8915A;
-    --line: #E0DDD3;
-    --highlight: #FFEFB8;
+    --accent-deep: #8B5E2E;
+    --line: #E5E0D2;
+    --highlight: #FFE585;
+    --highlight-soft: #FFF6CC;
+    --success: #2E7D5B;
+    --error: #C04848;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
-
   body {
     font-family: 'Noto Sans JP', system-ui, sans-serif;
     background: var(--bg);
-    color: var(--text);
-    line-height: 1.8;
+    color: var(--ink);
+    line-height: 1.85;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
   }
-
   h1, h2, h3, .serif {
     font-family: 'Noto Serif JP', serif;
     font-weight: 700;
-    line-height: 1.4;
-    letter-spacing: -0.01em;
+    line-height: 1.45;
+    letter-spacing: -0.005em;
   }
-
   a { color: inherit; text-decoration: none; }
+  img, svg { max-width: 100%; display: block; }
 
   .container {
     width: 100%;
     max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .container-narrow {
+    max-width: 820px;
     margin: 0 auto;
     padding: 0 24px;
   }
@@ -56,7 +63,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(250, 250, 246, 0.92);
+    background: rgba(251, 249, 244, 0.95);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--line);
   }
@@ -72,148 +79,204 @@
     font-family: 'Noto Serif JP', serif;
     font-weight: 900;
     font-size: 17px;
-    letter-spacing: 0.02em;
   }
   .logo span { color: var(--accent-warm); }
   .header-cta {
-    background: var(--text);
+    background: var(--ink);
     color: white;
     padding: 10px 20px;
     border-radius: 4px;
     font-size: 13px;
-    font-weight: 500;
-    transition: opacity 0.2s;
+    font-weight: 700;
   }
-  .header-cta:hover { opacity: 0.85; }
 
   /* ========== Hero ========== */
   .hero {
-    padding: 80px 0 100px;
-    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+    padding: 72px 0 90px;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-warm) 100%);
     position: relative;
     overflow: hidden;
   }
-  .hero::before {
+  .hero::before, .hero::after {
     content: "";
     position: absolute;
-    top: -100px;
-    right: -100px;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(184, 145, 90, 0.08) 0%, transparent 70%);
     border-radius: 50%;
+    background: radial-gradient(circle, rgba(184, 145, 90, 0.10) 0%, transparent 70%);
+    pointer-events: none;
   }
+  .hero::before { top: -120px; right: -120px; width: 460px; height: 460px; }
+  .hero::after { bottom: -100px; left: -100px; width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(30, 58, 95, 0.06) 0%, transparent 70%); }
+
   .hero-tag {
     display: inline-block;
-    background: white;
+    background: var(--paper);
     border: 1px solid var(--line);
-    padding: 6px 14px;
+    padding: 8px 18px;
     border-radius: 100px;
     font-size: 13px;
-    font-weight: 500;
-    color: var(--text-soft);
+    font-weight: 700;
+    color: var(--ink-soft);
     margin-bottom: 32px;
     letter-spacing: 0.03em;
   }
   .hero-tag::before {
-    content: "● ";
+    content: "●";
     color: var(--accent-warm);
-    font-size: 10px;
+    font-size: 9px;
+    margin-right: 8px;
+    vertical-align: middle;
   }
+
   .hero h1 {
-    font-size: clamp(32px, 5.5vw, 56px);
+    font-size: clamp(34px, 5.8vw, 60px);
     font-weight: 900;
-    margin-bottom: 28px;
-    color: var(--text);
+    margin-bottom: 32px;
+    letter-spacing: -0.01em;
   }
   .hero h1 .accent {
-    color: var(--accent-warm);
-    border-bottom: 4px solid var(--accent-warm);
-    padding-bottom: 4px;
+    color: var(--accent-deep);
+    background: linear-gradient(180deg, transparent 65%, var(--highlight) 65%);
+    padding: 0 4px;
   }
   .hero h1 .small {
     display: block;
-    font-size: 0.55em;
-    margin-top: 16px;
-    color: var(--text-soft);
+    font-size: 0.5em;
+    margin-top: 24px;
+    color: var(--ink-soft);
     font-weight: 500;
+    line-height: 1.6;
+    font-family: 'Noto Sans JP', sans-serif;
   }
   .hero-sub {
-    font-size: 17px;
-    color: var(--text-soft);
-    max-width: 640px;
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 660px;
     margin-bottom: 40px;
+    line-height: 1.9;
   }
+  .hero-sub strong {
+    color: var(--ink);
+    background: linear-gradient(180deg, transparent 70%, var(--highlight-soft) 70%);
+    padding: 0 2px;
+    font-weight: 700;
+  }
+
   .hero-stats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 32px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
     margin-bottom: 48px;
-    padding: 28px 32px;
-    background: white;
+    background: var(--paper);
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(27, 37, 48, 0.04);
   }
   .hero-stat-item {
-    flex: 1 1 auto;
+    padding: 24px 20px;
+    text-align: center;
+    border-right: 1px solid var(--line);
   }
+  .hero-stat-item:last-child { border-right: none; }
   .hero-stat-num {
     font-family: 'Noto Serif JP', serif;
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 900;
     color: var(--accent);
     line-height: 1;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
-  .hero-stat-num small { font-size: 18px; font-weight: 700; color: var(--text-soft); margin-left: 2px; }
-  .hero-stat-label {
-    font-size: 13px;
-    color: var(--text-soft);
-  }
+  .hero-stat-num small { font-size: 16px; font-weight: 700; color: var(--ink-soft); margin-left: 2px; }
+  .hero-stat-label { font-size: 12px; color: var(--ink-soft); font-weight: 500; }
+
   .cta-primary {
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    background: var(--text);
+    background: var(--ink);
     color: white;
-    padding: 18px 40px;
-    border-radius: 6px;
-    font-size: 16px;
+    padding: 20px 44px;
+    border-radius: 8px;
+    font-size: 17px;
     font-weight: 700;
     transition: transform 0.15s, box-shadow 0.15s;
-    box-shadow: 0 4px 0 0 var(--accent-warm);
+    box-shadow: 0 5px 0 0 var(--accent-deep);
   }
-  .cta-primary:hover { transform: translateY(-1px); box-shadow: 0 5px 0 0 var(--accent-warm); }
-  .cta-primary::after { content: "→"; font-size: 18px; }
+  .cta-primary:hover { transform: translateY(-2px); box-shadow: 0 7px 0 0 var(--accent-deep); }
+  .cta-primary::after { content: "→"; font-size: 20px; }
   .cta-meta {
-    margin-top: 16px;
+    margin-top: 20px;
     font-size: 13px;
-    color: var(--text-muted);
+    color: var(--ink-mute);
+  }
+  .cta-meta::before { content: "✓ "; color: var(--success); font-weight: 900; }
+
+  /* ========== Story section ========== */
+  .story-section {
+    background: var(--paper);
+    padding: 100px 0;
+  }
+  .story-card {
+    background: var(--bg);
+    border-left: 4px solid var(--accent-warm);
+    padding: 40px 48px;
+    border-radius: 4px;
+    font-size: 17px;
+    line-height: 2;
+    color: var(--ink-soft);
+    position: relative;
+  }
+  .story-card::before {
+    content: "“";
+    position: absolute;
+    top: -10px;
+    left: 24px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 100px;
+    color: var(--accent-warm);
+    opacity: 0.3;
+    line-height: 1;
+  }
+  .story-card p { margin-bottom: 16px; }
+  .story-card p:last-child { margin-bottom: 0; }
+  .story-card strong { color: var(--ink); font-weight: 700; }
+  .story-attribution {
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--ink-mute);
+    text-align: right;
   }
 
   /* ========== Section base ========== */
   section { padding: 100px 0; }
   .section-tag {
     font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
+    font-weight: 900;
+    letter-spacing: 0.25em;
     color: var(--accent-warm);
     margin-bottom: 16px;
     text-transform: uppercase;
   }
   .section-title {
-    font-size: clamp(26px, 3.5vw, 40px);
+    font-size: clamp(28px, 3.8vw, 42px);
     margin-bottom: 24px;
+  }
+  .section-title .accent {
+    color: var(--accent-deep);
+    background: linear-gradient(180deg, transparent 60%, var(--highlight) 60%);
+    padding: 0 4px;
   }
   .section-lead {
     font-size: 17px;
-    color: var(--text-soft);
+    color: var(--ink-soft);
     max-width: 720px;
     margin-bottom: 48px;
+    line-height: 1.95;
   }
 
   /* ========== Problem section ========== */
-  .problem-section { background: white; }
+  .problem-section { background: var(--bg-alt); }
   .pain-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -221,59 +284,70 @@
     margin-top: 48px;
   }
   .pain-card {
-    border: 1px solid var(--line);
-    background: var(--bg);
+    background: var(--paper);
     padding: 32px 28px;
-    border-radius: 8px;
-    transition: transform 0.2s, border-color 0.2s;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    transition: transform 0.2s;
   }
-  .pain-card:hover {
-    border-color: var(--accent-warm);
-    transform: translateY(-2px);
-  }
-  .pain-num {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--accent-warm);
-    letter-spacing: 0.15em;
-    margin-bottom: 12px;
+  .pain-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(27, 37, 48, 0.08); }
+  .pain-icon {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    background: var(--bg-warm);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-deep);
   }
   .pain-card h3 {
-    font-size: 19px;
-    margin-bottom: 12px;
+    font-size: 18px;
+    margin-bottom: 10px;
   }
   .pain-card p {
-    font-size: 15px;
-    color: var(--text-soft);
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+    line-height: 1.8;
   }
-  .pain-card .pain-time {
+  .pain-time {
     display: inline-block;
-    margin-top: 16px;
-    font-size: 13px;
-    background: var(--highlight);
+    font-size: 12px;
+    background: var(--ink);
+    color: var(--highlight);
     padding: 4px 12px;
     border-radius: 4px;
     font-weight: 700;
-    color: var(--text);
   }
   .pain-summary {
     margin-top: 56px;
-    padding: 32px;
-    background: var(--text);
+    padding: 40px 32px;
+    background: var(--ink);
     color: white;
-    border-radius: 8px;
+    border-radius: 12px;
     text-align: center;
   }
-  .pain-summary strong {
+  .pain-summary-num {
     font-family: 'Noto Serif JP', serif;
-    font-size: clamp(22px, 3vw, 30px);
-    color: white;
+    font-size: clamp(48px, 7vw, 80px);
+    font-weight: 900;
+    color: var(--highlight);
+    line-height: 1;
+    margin-bottom: 12px;
   }
-  .pain-summary strong .yellow { color: #FFD84D; }
+  .pain-summary-text {
+    font-size: clamp(16px, 2vw, 20px);
+    color: rgba(255,255,255,0.9);
+    line-height: 1.8;
+  }
 
   /* ========== Solution section ========== */
-  .solution-section { background: var(--bg-alt); }
+  .solution-section { background: var(--paper); }
   .solution-options {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -281,139 +355,269 @@
     margin: 48px 0;
   }
   .option-card {
-    background: white;
+    background: var(--bg);
     padding: 28px 20px;
-    border-radius: 8px;
+    border-radius: 10px;
     text-align: center;
-    border: 1px solid var(--line);
+    border: 2px solid var(--line);
+    position: relative;
+  }
+  .option-card.struck::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 8%;
+    right: 8%;
+    height: 2px;
+    background: var(--ink-mute);
+    transform: rotate(-3deg);
+    opacity: 0.4;
   }
   .option-card.highlight {
-    background: var(--text);
+    background: var(--ink);
     color: white;
-    border-color: var(--text);
+    border-color: var(--ink);
     transform: scale(1.05);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    box-shadow: 0 16px 40px rgba(27, 37, 48, 0.18);
   }
-  .option-card.highlight .option-num {
+  .option-card.highlight::before {
+    content: "👑 これが第4の選択肢";
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
     background: var(--accent-warm);
     color: white;
+    padding: 4px 14px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
   }
   .option-num {
     display: inline-block;
-    width: 28px;
-    height: 28px;
-    line-height: 28px;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
     background: var(--bg-alt);
-    color: var(--text);
+    color: var(--ink);
     border-radius: 50%;
     font-weight: 700;
     margin-bottom: 16px;
-    font-size: 13px;
+    font-size: 14px;
   }
-  .option-title {
-    font-weight: 700;
-    margin-bottom: 8px;
-    font-size: 16px;
-  }
-  .option-desc {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
-  .option-card.highlight .option-desc { color: rgba(255,255,255,0.7); }
+  .option-card.highlight .option-num { background: var(--accent-warm); color: white; }
+  .option-title { font-weight: 700; margin-bottom: 10px; font-size: 16px; }
+  .option-desc { font-size: 13px; color: var(--ink-mute); line-height: 1.7; }
+  .option-card.highlight .option-desc { color: rgba(255,255,255,0.75); }
 
   .solution-features {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 32px;
-    margin-top: 48px;
+    margin-top: 64px;
+  }
+  .feature-item {
+    text-align: center;
+    padding: 32px 24px;
+    background: var(--bg-warm);
+    border-radius: 12px;
+  }
+  .feature-icon {
+    width: 64px;
+    height: 64px;
+    background: white;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: var(--accent-deep);
+    box-shadow: 0 4px 12px rgba(184, 145, 90, 0.15);
   }
   .feature-item h4 {
     font-family: 'Noto Serif JP', serif;
     font-size: 18px;
-    margin-bottom: 12px;
-    color: var(--accent);
-  }
-  .feature-item h4 .num {
-    color: var(--accent-warm);
-    margin-right: 8px;
+    margin-bottom: 10px;
+    color: var(--ink);
   }
   .feature-item p {
     font-size: 14px;
-    color: var(--text-soft);
+    color: var(--ink-soft);
+    line-height: 1.8;
   }
 
-  /* ========== Demo section ========== */
-  .demo-section { background: white; }
-  .demo-list { margin-top: 48px; }
+  /* ========== Demo section (Before/After) ========== */
+  .demo-section { background: var(--bg-alt); }
+  .demo-list { margin-top: 48px; display: flex; flex-direction: column; gap: 32px; }
   .demo-card {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 48px;
-    padding: 48px 0;
-    border-bottom: 1px solid var(--line);
-    align-items: center;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 4px 24px rgba(27, 37, 48, 0.04);
   }
-  .demo-card:last-child { border-bottom: none; }
-  .demo-visual {
-    background: var(--bg-dark);
-    border-radius: 8px;
-    padding: 24px;
-    color: #C0E2FF;
-    font-family: 'SF Mono', 'Menlo', monospace;
-    font-size: 12px;
-    line-height: 1.7;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  }
-  .demo-visual .prompt { color: #FFD84D; }
-  .demo-visual .out { color: #B8E8C4; }
-  .demo-visual .hash { color: #A89BC4; font-weight: 700; }
-  .demo-visual .dim { color: #5A6975; }
-  .demo-visual .bar {
+  .demo-header {
     display: flex;
-    gap: 6px;
-    margin-bottom: 16px;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
   }
-  .demo-visual .bar span {
-    width: 10px; height: 10px; border-radius: 50%; background: #4A5660;
+  .demo-num {
+    width: 48px;
+    height: 48px;
+    background: var(--ink);
+    color: var(--highlight);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 900;
+    font-size: 22px;
+    flex-shrink: 0;
   }
-  .demo-visual .bar span:first-child { background: #FF5F57; }
-  .demo-visual .bar span:nth-child(2) { background: #FFBD2E; }
-  .demo-visual .bar span:nth-child(3) { background: #28CA42; }
+  .demo-header h3 {
+    font-size: 22px;
+  }
 
-  .demo-info .demo-tag {
+  .ba-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    align-items: stretch;
+  }
+  .ba-side {
+    padding: 28px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  .ba-before {
+    background: #FAF3F1;
+    border: 1px solid #EDD9D5;
+  }
+  .ba-after {
+    background: #F0F7F2;
+    border: 1px solid #C8E2D2;
+  }
+  .ba-label {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    margin-bottom: 12px;
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    align-self: flex-start;
+  }
+  .ba-before .ba-label { background: #C04848; color: white; }
+  .ba-after .ba-label { background: var(--success); color: white; }
+  .ba-time {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 900;
+    font-size: 28px;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .ba-before .ba-time { color: #B8403F; }
+  .ba-after .ba-time { color: var(--success); }
+  .ba-side ul { list-style: none; padding: 0; }
+  .ba-side li {
+    font-size: 14px;
+    color: var(--ink-soft);
+    padding: 6px 0;
+    padding-left: 24px;
+    position: relative;
+  }
+  .ba-before li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--ink-mute);
+  }
+  .ba-after li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--success);
+    font-weight: 900;
+  }
+  .ba-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--accent-warm);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
+    font-size: 32px;
+    font-weight: 900;
+  }
+
+  .demo-result-bar {
+    margin-top: 24px;
+    background: var(--bg-warm);
+    padding: 16px 24px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+  }
+  .demo-result-bar strong {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    color: var(--accent-deep);
+  }
+
+  .demo-explanation {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px dashed var(--line);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.9;
+  }
+  .demo-explanation strong { color: var(--accent-deep); }
+
+  /* ========== Takeaways ========== */
+  .takeaway-section { background: var(--bg-warm); }
+  .takeaway-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+  .takeaway-card {
+    background: var(--paper);
+    padding: 32px 28px;
+    border-radius: 12px;
+    border-top: 4px solid var(--accent-warm);
+  }
+  .takeaway-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--accent-warm);
+    letter-spacing: 0.2em;
     margin-bottom: 12px;
   }
-  .demo-info h3 {
-    font-size: 24px;
-    margin-bottom: 16px;
+  .takeaway-card h4 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    margin-bottom: 12px;
+    line-height: 1.5;
   }
-  .demo-info p {
-    font-size: 15px;
-    color: var(--text-soft);
-    margin-bottom: 16px;
-  }
-  .demo-info .demo-result {
-    display: inline-block;
-    background: var(--bg-alt);
-    padding: 8px 16px;
-    border-radius: 4px;
+  .takeaway-card p {
     font-size: 14px;
-    font-weight: 700;
+    color: var(--ink-soft);
+    line-height: 1.8;
   }
-  .demo-info .demo-result strong { color: var(--accent); }
 
-  /* ========== Speaker section ========== */
-  .speaker-section { background: var(--bg-alt); }
+  /* ========== Speaker ========== */
+  .speaker-section { background: var(--paper); }
   .speaker-card {
-    background: white;
+    background: var(--bg);
     padding: 48px;
-    border-radius: 8px;
+    border-radius: 12px;
     display: grid;
     grid-template-columns: 200px 1fr;
     gap: 48px;
@@ -424,17 +628,19 @@
     width: 200px;
     height: 200px;
     background: linear-gradient(135deg, var(--accent) 0%, var(--accent-warm) 100%);
-    border-radius: 8px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-family: 'Noto Serif JP', serif;
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 22px;
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.3;
   }
   .speaker-info h3 {
-    font-size: 26px;
+    font-size: 28px;
     margin-bottom: 4px;
   }
   .speaker-role {
@@ -444,86 +650,256 @@
     font-size: 14px;
   }
   .speaker-info p {
-    color: var(--text-soft);
+    color: var(--ink-soft);
     margin-bottom: 16px;
+    font-size: 15px;
   }
 
-  /* ========== Event details / Form ========== */
-  .event-section {
-    background: var(--text);
-    color: white;
-  }
-  .event-section .section-title { color: white; }
-  .event-section .section-lead { color: rgba(255,255,255,0.75); }
-
-  .event-grid {
+  /* ========== Voices (testimonials) ========== */
+  .voices-section { background: var(--bg-alt); }
+  .voices-list {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
     margin-top: 48px;
   }
-
-  .event-details {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 8px;
-    padding: 32px;
+  .voice-card {
+    background: var(--paper);
+    padding: 32px 28px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    position: relative;
   }
-  .event-details dl {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 16px 24px;
+  .voice-card::before {
+    content: "“";
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 60px;
+    color: var(--accent-warm);
+    opacity: 0.25;
+    line-height: 1;
   }
-  .event-details dt {
-    font-size: 13px;
-    color: rgba(255,255,255,0.6);
-    font-weight: 700;
-    letter-spacing: 0.05em;
-  }
-  .event-details dd {
-    color: white;
+  .voice-quote {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16px;
+    line-height: 1.85;
+    margin-bottom: 24px;
+    color: var(--ink);
     font-weight: 500;
   }
-  .event-details dd .price {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 28px;
-    font-weight: 900;
-    color: #FFD84D;
+  .voice-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
   }
-  .event-details dd .price small {
+  .voice-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-warm) 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
     font-size: 14px;
-    color: rgba(255,255,255,0.6);
-    margin-left: 6px;
+  }
+  .voice-name { font-size: 14px; font-weight: 700; }
+  .voice-role { font-size: 12px; color: var(--ink-mute); }
+  .voices-disclaimer {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 12px;
+    color: var(--ink-mute);
   }
 
-  /* Form */
-  .signup-form {
-    background: white;
-    color: var(--text);
-    padding: 32px;
-    border-radius: 8px;
+  /* ========== Offer / Pricing ========== */
+  .offer-section {
+    background: var(--ink);
+    color: white;
   }
-  .signup-form h3 {
-    font-size: 20px;
-    margin-bottom: 8px;
+  .offer-section .section-title { color: white; }
+  .offer-section .section-title .accent {
+    color: var(--highlight);
+    background: none;
+    padding: 0;
   }
-  .signup-form .form-lead {
-    font-size: 13px;
-    color: var(--text-soft);
-    margin-bottom: 24px;
+  .offer-section .section-lead { color: rgba(255,255,255,0.8); }
+
+  .offer-card {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F4E9 100%);
+    color: var(--ink);
+    padding: 56px 48px;
+    border-radius: 16px;
+    margin-top: 48px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
   }
-  .form-row {
-    margin-bottom: 16px;
+  .offer-card::before {
+    content: "β価格 数量限定";
+    position: absolute;
+    top: 24px;
+    right: -40px;
+    background: var(--error);
+    color: white;
+    padding: 6px 56px;
+    transform: rotate(35deg);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
   }
-  .form-row label {
+
+  .offer-stack { margin-bottom: 32px; }
+  .stack-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .stack-item:last-child { border-bottom: none; }
+  .stack-name {
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .stack-name .desc {
     display: block;
     font-size: 12px;
+    color: var(--ink-mute);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+  .stack-price {
+    font-family: 'Noto Serif JP', serif;
     font-weight: 700;
-    margin-bottom: 6px;
-    color: var(--text-soft);
+    color: var(--ink-soft);
+    font-size: 15px;
+  }
+  .stack-total {
+    background: var(--bg-warm);
+    margin: 24px -24px 0;
+    padding: 24px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .stack-total .label { font-size: 14px; font-weight: 700; }
+  .stack-total .value {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: line-through;
+    text-decoration-color: var(--error);
+  }
+
+  .offer-price {
+    text-align: center;
+    margin: 32px 0;
+    padding: 24px;
+    background: var(--ink);
+    color: white;
+    border-radius: 12px;
+  }
+  .offer-price-label {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--highlight);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .offer-price-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(48px, 7vw, 72px);
+    font-weight: 900;
+    color: var(--highlight);
+    line-height: 1;
+  }
+  .offer-price-num small {
+    font-size: 0.4em;
+    color: rgba(255, 229, 133, 0.7);
+    margin-left: 4px;
+  }
+  .offer-price-meta {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 12px;
+  }
+
+  .guarantee-box {
+    background: var(--bg-warm);
+    padding: 24px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-left: 4px solid var(--success);
+  }
+  .guarantee-icon {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--success);
+    font-size: 28px;
+  }
+  .guarantee-text strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+  .guarantee-text p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+
+  /* ========== Form ========== */
+  .form-section {
+    background: var(--bg-warm);
+    padding: 100px 0;
+  }
+  .signup-form {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 48px;
+    border-radius: 12px;
+    box-shadow: 0 16px 48px rgba(27, 37, 48, 0.08);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .signup-form h3 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .form-lead {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  .form-row { margin-bottom: 20px; }
+  .form-row label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--ink);
   }
   .form-row label .required {
-    color: #C04848;
+    color: var(--error);
     margin-left: 4px;
     font-size: 11px;
   }
@@ -531,11 +907,11 @@
   .form-row select,
   .form-row textarea {
     width: 100%;
-    padding: 10px 14px;
-    border: 1px solid var(--line);
-    border-radius: 4px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--line);
+    border-radius: 6px;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 15px;
     background: var(--bg);
     transition: border-color 0.2s;
   }
@@ -546,46 +922,98 @@
     border-color: var(--accent);
     background: white;
   }
-  .form-row textarea { resize: vertical; min-height: 80px; }
+  .form-row textarea { resize: vertical; min-height: 100px; }
   .form-submit {
     width: 100%;
-    background: var(--text);
+    background: var(--ink);
     color: white;
-    padding: 16px;
+    padding: 20px;
     border: none;
-    border-radius: 4px;
-    font-size: 15px;
+    border-radius: 8px;
+    font-size: 17px;
     font-weight: 700;
     cursor: pointer;
-    margin-top: 12px;
+    margin-top: 16px;
     font-family: inherit;
-    transition: opacity 0.15s;
+    transition: opacity 0.15s, transform 0.15s;
+    box-shadow: 0 5px 0 0 var(--accent-deep);
   }
-  .form-submit:hover { opacity: 0.85; }
+  .form-submit:hover { opacity: 0.95; transform: translateY(-1px); box-shadow: 0 6px 0 0 var(--accent-deep); }
   .form-note {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 12px;
+    font-size: 12px;
+    color: var(--ink-mute);
+    margin-top: 16px;
     text-align: center;
+    line-height: 1.7;
+  }
+
+  /* ========== For/NotFor ========== */
+  .fitness-section { background: var(--paper); }
+  .fitness-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 48px;
+  }
+  .fitness-card {
+    padding: 36px 32px;
+    border-radius: 12px;
+  }
+  .fitness-card.yes { background: #F0F7F2; border: 1px solid #C8E2D2; }
+  .fitness-card.no { background: #FAF3F1; border: 1px solid #EDD9D5; }
+  .fitness-card h4 {
+    font-size: 19px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .fitness-card.yes h4 { color: var(--success); }
+  .fitness-card.no h4 { color: #B8403F; }
+  .fitness-card ul { list-style: none; padding: 0; }
+  .fitness-card li {
+    padding: 10px 0 10px 32px;
+    position: relative;
+    font-size: 15px;
+    color: var(--ink-soft);
+    border-bottom: 1px dashed rgba(0,0,0,0.06);
+  }
+  .fitness-card li:last-child { border-bottom: none; }
+  .fitness-card.yes li::before {
+    content: "○";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    color: var(--success);
+    font-weight: 900;
+    font-size: 18px;
+  }
+  .fitness-card.no li::before {
+    content: "✕";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    color: #B8403F;
+    font-weight: 900;
+    font-size: 16px;
   }
 
   /* ========== FAQ ========== */
-  .faq-section { background: white; }
-  .faq-list {
-    margin-top: 48px;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+  .faq-section { background: var(--bg-alt); }
+  .faq-list { margin-top: 48px; }
   .faq-item {
-    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
   }
   .faq-q {
     width: 100%;
     text-align: left;
     background: none;
     border: none;
-    padding: 24px 0;
+    padding: 24px 28px;
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
@@ -593,49 +1021,67 @@
     justify-content: space-between;
     align-items: center;
     font-family: inherit;
-    color: var(--text);
+    color: var(--ink);
+    transition: background 0.2s;
   }
+  .faq-q:hover { background: var(--bg); }
   .faq-q::after {
     content: "+";
-    font-size: 22px;
+    font-size: 24px;
     color: var(--accent-warm);
     transition: transform 0.2s;
+    font-weight: 400;
   }
-  .faq-item.open .faq-q::after {
-    transform: rotate(45deg);
+  .faq-item.open .faq-q::after { transform: rotate(45deg); }
+  .faq-q .faq-label {
+    background: var(--accent-warm);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    margin-right: 12px;
+    font-weight: 900;
   }
   .faq-a {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease, padding 0.3s ease;
-    color: var(--text-soft);
+    color: var(--ink-soft);
     font-size: 15px;
+    padding: 0 28px;
+    line-height: 1.9;
   }
   .faq-item.open .faq-a {
-    max-height: 400px;
-    padding: 0 0 24px;
+    max-height: 500px;
+    padding: 4px 28px 24px;
   }
 
   /* ========== Final CTA ========== */
   .final-cta {
-    background: linear-gradient(135deg, var(--bg-alt) 0%, var(--bg) 100%);
+    background: linear-gradient(135deg, var(--bg-warm) 0%, var(--bg) 100%);
     padding: 120px 0;
     text-align: center;
   }
   .final-cta h2 {
-    font-size: clamp(28px, 4vw, 44px);
-    margin-bottom: 24px;
+    font-size: clamp(30px, 4.5vw, 48px);
+    margin-bottom: 28px;
+  }
+  .final-cta h2 .accent {
+    color: var(--accent-deep);
+    background: linear-gradient(180deg, transparent 60%, var(--highlight) 60%);
+    padding: 0 4px;
   }
   .final-cta p {
     font-size: 17px;
-    color: var(--text-soft);
-    max-width: 560px;
+    color: var(--ink-soft);
+    max-width: 600px;
     margin: 0 auto 40px;
+    line-height: 1.95;
   }
 
   /* ========== Footer ========== */
   footer {
-    background: var(--text);
+    background: var(--ink);
     color: rgba(255,255,255,0.6);
     padding: 48px 0;
     font-size: 13px;
@@ -653,15 +1099,30 @@
   /* ========== Mobile ========== */
   @media (max-width: 768px) {
     .hero { padding: 56px 0 72px; }
-    .hero-stats { flex-direction: column; gap: 20px; padding: 24px; }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    .hero-stat-item { border-right: none; border-bottom: 1px solid var(--line); }
+    .hero-stat-item:nth-child(2) { border-right: none; }
+    .hero-stat-item:nth-child(odd) { border-right: 1px solid var(--line); }
+    .hero-stat-item:nth-last-child(-n+2) { border-bottom: none; }
+
     .pain-list { grid-template-columns: 1fr; }
     .solution-options { grid-template-columns: repeat(2, 1fr); }
-    .option-card.highlight { transform: scale(1); }
-    .solution-features { grid-template-columns: 1fr; gap: 24px; }
-    .demo-card { grid-template-columns: 1fr; gap: 24px; padding: 32px 0; }
+    .option-card.highlight { transform: scale(1); margin-top: 16px; }
+    .solution-features { grid-template-columns: 1fr; }
+    .takeaway-list { grid-template-columns: 1fr; }
+    .voices-list { grid-template-columns: 1fr; }
+    .fitness-grid { grid-template-columns: 1fr; }
+
+    .ba-grid { grid-template-columns: 1fr; }
+    .ba-arrow { transform: rotate(90deg); padding: 8px; }
+    .demo-card { padding: 28px 24px; }
+
     .speaker-card { grid-template-columns: 1fr; gap: 24px; padding: 32px; text-align: center; }
     .speaker-photo { margin: 0 auto; width: 160px; height: 160px; }
-    .event-grid { grid-template-columns: 1fr; gap: 32px; }
+
+    .offer-card { padding: 40px 28px; }
+    .signup-form { padding: 32px 24px; }
+
     section { padding: 64px 0; }
     .header-cta { padding: 8px 14px; font-size: 12px; }
   }
@@ -680,15 +1141,16 @@
 <!-- ========== Hero ========== -->
 <section class="hero">
   <div class="container">
-    <div class="hero-tag">経営者・意思決定層 限定｜120分オンラインライブ</div>
+    <div class="hero-tag">経営者・意思決定層 限定 ／ 120分オンラインライブ</div>
     <h1>
-      経営者の<span class="accent">月30時間</span>を、<br>
-      AIで取り戻す。
-      <span class="small">VSCode恐怖症の経営者でも腑に落ちる、AIチーフ・オブ・スタッフ実装ライブ</span>
+      毎月<span class="accent">30時間</span>を、<br>
+      経営判断に取り戻す。
+      <span class="small">プログラミング知識ゼロでも腑に落ちる、<br>経営者のためのAI実装ライブ</span>
     </h1>
     <p class="hero-sub">
-      プログラミング知識は不要です。必要なのは、あなたが普段、部下に指示を出している、その能力だけ。<br>
-      議事録、朝の情報収集、発信のテキスト化──月30時間奪っているこれらを、目の前で消してみせます。
+      議事録の整理、朝の情報収集、発信のテキスト化──。<br>
+      <strong>「自分じゃなくてもいい仕事」が月30時間</strong>あります。<br>
+      120分のライブで、その時間を取り戻す方法を目の前で実演します。
     </p>
 
     <div class="hero-stats">
@@ -698,15 +1160,15 @@
       </div>
       <div class="hero-stat-item">
         <div class="hero-stat-num">3<small>本</small></div>
-        <div class="hero-stat-label">経営者の業務を自動化するデモ</div>
+        <div class="hero-stat-label">経営者向け実演デモ</div>
       </div>
       <div class="hero-stat-item">
-        <div class="hero-stat-num">¥10,000<small>税込</small></div>
-        <div class="hero-stat-label">β価格／次回以降は¥29,800</div>
+        <div class="hero-stat-num">¥10,000</div>
+        <div class="hero-stat-label">β価格／次回以降¥29,800</div>
       </div>
       <div class="hero-stat-item">
         <div class="hero-stat-num">30<small>名</small></div>
-        <div class="hero-stat-label">先着限定／残り枠わずか</div>
+        <div class="hero-stat-label">先着限定</div>
       </div>
     </div>
 
@@ -715,45 +1177,103 @@
   </div>
 </section>
 
+<!-- ========== Story ========== -->
+<section class="story-section">
+  <div class="container-narrow">
+    <div class="section-tag">月曜の朝</div>
+    <h2 class="section-title">これは、<span class="accent">あなたの話</span>かもしれません。</h2>
+
+    <div class="story-card">
+      <p>月曜の朝、7時半。経営者のあなたはいつも通り、スマホでニュースを開きます。
+      Slackの未読、メール、業界レポート、競合の発信──気づくと <strong>15分が溶けて</strong>います。
+      「あれ、今日は何を決めるんだっけ」を思い出すのに、また5分。</p>
+
+      <p>9時、役員会。1時間の議論のあと「議事録、整理しておきます」と言って自席に戻る。
+      録画はあるけれど、見直すのに30分以上かかると思うと気が重い。結局、自分の記憶を頼りに書き出すことになります。</p>
+
+      <p>14時、取引先からの問い合わせ。「3か月前に、確かこの件で何か約束したような…」と、
+      古いメールを検索する。10分後、ようやく見つけた約束を見ながら、<strong>記憶頼りで運用してきた怖さ</strong>を感じます。</p>
+
+      <p>夜、Podcast収録。来月発信する予定の20分を録り終えた。「あとは記事化するだけ」──
+      でもこれに2〜3時間かかると思うと、また後回し。気づけば <strong>2か月、発信が止まっています</strong>。</p>
+
+      <p>これは、ある経営者の月曜日です。<br>
+      ──そして、たぶん、あなたの月曜日でもあります。</p>
+    </div>
+
+  </div>
+</section>
+
 <!-- ========== Problem ========== -->
 <section class="problem-section">
   <div class="container">
-    <div class="section-tag">PROBLEM</div>
-    <h2 class="section-title">あなたは、こんな経営者ではありませんか？</h2>
+    <div class="section-tag">問題の正体</div>
+    <h2 class="section-title">経営者の時間を奪う、<span class="accent">4つの罠</span></h2>
     <p class="section-lead">
-      経営者の "1日の中の90分" は、本来やる必要のない業務に消えています。
-      具体的にどこに時間が奪われているのか、4つの罠を見てください。
+      個別の業務はどれも10〜30分の小さなもの。でも積み上げると、月30時間が消えています。
+      これらは "誰かに任せたい" 仕事ですが、秘書を雇うほどでもなく、一人で抱えている経営者がほとんどです。
     </p>
 
     <div class="pain-list">
       <div class="pain-card">
-        <div class="pain-num">罠 #01</div>
-        <h3>議事録と会議のフォローアップ</h3>
-        <p>1on1や役員会のあと、自分で議事録をまとめ直していませんか？録画はあるけど見直す時間がない、結局記憶頼り。</p>
-        <span class="pain-time">月10時間</span>
+        <div class="pain-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/>
+          </svg>
+        </div>
+        <div>
+          <h3>議事録と会議のフォローアップ</h3>
+          <p>1on1や役員会のあと、自分で議事録をまとめ直す時間。録画はあるけど見直すヒマがなく、結局記憶頼り。</p>
+          <span class="pain-time">月10時間</span>
+        </div>
       </div>
+
       <div class="pain-card">
-        <div class="pain-num">罠 #02</div>
-        <h3>朝の脳の起動コスト</h3>
-        <p>スマホでニュース、Slack、メール、業界レポート…気づいたら15分。「今日は何を決めるんだっけ」を思い出すのにまた5分。</p>
-        <span class="pain-time">月7.5時間</span>
+        <div class="pain-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div>
+          <h3>朝の脳の起動コスト</h3>
+          <p>ニュース、Slack、メール、業界レポートを開くだけで15分。「今日何を決めるんだっけ」を思い出すのにまた5分。</p>
+          <span class="pain-time">月7.5時間</span>
+        </div>
       </div>
+
       <div class="pain-card">
-        <div class="pain-num">罠 #03</div>
-        <h3>情報の散在と記憶頼り</h3>
-        <p>「あのクライアントの担当、誰だっけ」「3か月前に何を約束したっけ」を毎回検索。漏れが起きるたびに信用を削る。</p>
-        <span class="pain-time">月5〜8時間</span>
+        <div class="pain-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/>
+          </svg>
+        </div>
+        <div>
+          <h3>情報の散在と記憶頼り</h3>
+          <p>「あの担当、誰だっけ」「3か月前に何を約束したっけ」を毎回検索。漏れが起きるたびに信用を削る。</p>
+          <span class="pain-time">月5〜8時間</span>
+        </div>
       </div>
+
       <div class="pain-card">
-        <div class="pain-num">罠 #04</div>
-        <h3>発信の停滞</h3>
-        <p>動画やPodcastは録っている。でも記事化に2〜3時間かかると思うと後回し。気づくと2か月発信していない。</p>
-        <span class="pain-time">機会損失計算不能</span>
+        <div class="pain-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+          </svg>
+        </div>
+        <div>
+          <h3>発信の停滞</h3>
+          <p>動画やPodcastは録っている。でも記事化に2〜3時間かかると思うと後回し。気づくと2か月発信していない。</p>
+          <span class="pain-time">機会損失大</span>
+        </div>
       </div>
     </div>
 
     <div class="pain-summary">
-      <strong>足し算すると、ほぼすべての経営者で<span class="yellow">月30時間以上</span>。<br>年間で営業日2か月分が、本来やる必要のない業務に消えています。</strong>
+      <div class="pain-summary-num">月30時間</div>
+      <div class="pain-summary-text">
+        年間で営業日 <strong style="color: var(--highlight);">2か月分</strong>。<br>
+        これだけの時間が、本来やる必要のない業務に消えています。
+      </div>
     </div>
   </div>
 </section>
@@ -761,149 +1281,269 @@
 <!-- ========== Solution ========== -->
 <section class="solution-section">
   <div class="container">
-    <div class="section-tag">SOLUTION</div>
-    <h2 class="section-title">4つ目の選択肢：AIチーフ・オブ・スタッフ</h2>
+    <div class="section-tag">解決策</div>
+    <h2 class="section-title">これまで、経営者の選択肢は<span class="accent">3つしか</span>ありませんでした。</h2>
     <p class="section-lead">
-      これまでの解決策は3つしかありませんでした。今、4つ目の選択肢が現実的になっています。
+      でも今、現実的な4つ目の選択肢が出てきています。それが「AIチーフ・オブ・スタッフ」です。
     </p>
 
     <div class="solution-options">
-      <div class="option-card">
+      <div class="option-card struck">
         <div class="option-num">1</div>
-        <div class="option-title">秘書を採用する</div>
-        <div class="option-desc">月30〜50万円＋教育コスト＋退職リスク</div>
+        <div class="option-title">秘書を採用</div>
+        <div class="option-desc">月30〜50万円<br>教育・退職リスク</div>
       </div>
-      <div class="option-card">
+      <div class="option-card struck">
         <div class="option-num">2</div>
         <div class="option-title">業務をやめる</div>
         <div class="option-desc">実際にはやめられない</div>
       </div>
-      <div class="option-card">
+      <div class="option-card struck">
         <div class="option-num">3</div>
-        <div class="option-title">早起きして頑張る</div>
+        <div class="option-title">早起きで頑張る</div>
         <div class="option-desc">持続不可能</div>
       </div>
       <div class="option-card highlight">
         <div class="option-num">4</div>
         <div class="option-title">AIチーフ・オブ・スタッフ</div>
-        <div class="option-desc">給与ゼロ／24時間稼働／引き継ぎ不要</div>
+        <div class="option-desc">給与ゼロ／24時間稼働<br>引き継ぎ不要</div>
       </div>
     </div>
 
+    <p class="section-lead" style="text-align:center; max-width: 720px; margin: 0 auto;">
+      ChatGPTのようなAIをただ使うのとは違います。<br>
+      <strong style="color: var(--ink);">あなた専属に "育てる"</strong> ことができる、新しいタイプのAIです。
+    </p>
+
     <div class="solution-features">
       <div class="feature-item">
-        <h4><span class="num">01</span>覚え続ける</h4>
-        <p>あなたの会社・性格・好みを一度設定すれば毎回伝える必要がない。ChatGPTとの最大の差です。</p>
+        <div class="feature-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <h4>あなたを覚え続ける</h4>
+        <p>会社情報・性格・好みを一度設定すれば、毎回伝える必要がありません。"いつもの私" として接してくれます。</p>
       </div>
       <div class="feature-item">
-        <h4><span class="num">02</span>連携する</h4>
-        <p>PC上のファイル・メール・カレンダーと連携。ブラウザの中だけで完結しないからこそ、業務に効きます。</p>
+        <div class="feature-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </div>
+        <h4>業務とつながる</h4>
+        <p>メール・カレンダー・社内の資料と連携できます。ブラウザの中だけで終わらない、本物の "実務" に効きます。</p>
       </div>
       <div class="feature-item">
-        <h4><span class="num">03</span>得意技を持つ</h4>
-        <p>繰り返す業務はスキル化できる。1度作れば毎回同じ品質で実行されます。</p>
+        <div class="feature-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h4>得意技を持たせられる</h4>
+        <p>繰り返す業務は "型" として登録できます。1度作れば、何度でも同じ品質で実行されます。</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ========== Demo ========== -->
-<section class="demo-section" id="demo">
+<!-- ========== Demo (Before/After) ========== -->
+<section class="demo-section">
   <div class="container">
-    <div class="section-tag">LIVE DEMO</div>
-    <h2 class="section-title">120分でお見せする3つの実演</h2>
+    <div class="section-tag">120分で見せること</div>
+    <h2 class="section-title">あなたの業務が、<span class="accent">こう変わります</span></h2>
     <p class="section-lead">
-      抽象論はゼロ。経営者本人の業務素材で、実際に動かして見せます。
+      抽象論はゼロ。実際の業務素材を使って、目の前で動かしてお見せします。<br>
       チャットで「うちはこう変えたい」と書いていただければ、その場でカスタマイズ。
     </p>
 
     <div class="demo-list">
       <!-- Demo 1 -->
       <div class="demo-card">
-        <div class="demo-visual">
-          <div class="bar"><span></span><span></span><span></span></div>
-          <div><span class="dim">$</span> <span class="prompt">claude run meeting_summary</span></div>
-          <div class="dim">  reading 役員会_議事録.txt (8,234 chars)...</div>
-          <div class="dim">  applying CLAUDE.md preferences...</div>
-          <div>  ✓ done in <span style="color:#FFD84D;">87秒</span></div>
-          <br>
-          <div class="hash">## 決定事項</div>
-          <div class="out">- Q3予算修正（営業 +20%、開発 -10%）</div>
-          <div class="out">- 新規プロダクト〇〇のローンチ7月</div>
-          <div class="out">- 役員人事の検討を来月に持ち越し</div>
-          <br>
-          <div class="hash">## 次のアクション</div>
-          <div class="out">- 田中CFO: 修正予算案を6/15まで</div>
-          <div class="out">- 佐藤VP: 採用計画を6/20まで</div>
-          <br>
-          <div class="hash">## あなたが次に判断すべきこと</div>
-          <div class="out">- 役員人事のスケジュール</div>
-          <div class="out">- 新規プロダクトの責任者指名</div>
+        <div class="demo-header">
+          <div class="demo-num">1</div>
+          <h3>議事録から決定事項を、ボタン1つで</h3>
         </div>
-        <div class="demo-info">
-          <div class="demo-tag">DEMO 01</div>
-          <h3>議事録から決定事項を90秒で抽出</h3>
-          <p>30分会議の文字起こし8,000字から、決定事項・次のアクション・あなたが判断すべきことを瞬時に抽出。</p>
-          <p>ポイントは "あなたが判断すべきこと" のセクション。CLAUDE.mdに「私は経営者なので、最後に必ず私の判断ポイントを抽出して」と書いてあるからです。</p>
-          <div class="demo-result">月10時間 → <strong>ほぼゼロ</strong></div>
+
+        <div class="ba-grid">
+          <div class="ba-side ba-before">
+            <span class="ba-label">これまで</span>
+            <div class="ba-time">30分／回</div>
+            <ul>
+              <li>録画を見直して文字起こしを読む</li>
+              <li>決定事項を箇条書きで書き出す</li>
+              <li>誰が何をするかを整理する</li>
+              <li>関係者にメールで送る</li>
+            </ul>
+          </div>
+          <div class="ba-arrow">→</div>
+          <div class="ba-side ba-after">
+            <span class="ba-label">これから</span>
+            <div class="ba-time">90秒／回</div>
+            <ul>
+              <li>録画ファイルを渡すだけ</li>
+              <li>決定事項3点が自動で抽出</li>
+              <li>担当・期限つきの宿題リスト</li>
+              <li>「あなたが次に判断すべきこと」も自動で整理</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="demo-result-bar">
+          <span>削減できる時間：</span>
+          <strong>月10時間 → ほぼゼロ</strong>
+        </div>
+
+        <div class="demo-explanation">
+          <strong>ポイント：</strong>"あなたが次に判断すべきこと" のセクションは、
+          AIにあらかじめ「私は経営者なので、最後に必ず私の判断ポイントを抽出して」と書いてあるから出てきます。
+          つまり、これは <strong>あなただけのために動くAI</strong> なんです。
         </div>
       </div>
 
       <!-- Demo 2 -->
       <div class="demo-card">
-        <div class="demo-visual">
-          <div class="bar"><span></span><span></span><span></span></div>
-          <div><span class="dim">$</span> <span class="prompt">claude run morning_brief</span></div>
-          <div class="dim">  fetching 5 sources...</div>
-          <div class="dim">  cross-referencing CLAUDE.md (your business)...</div>
-          <div>  ✓ done in <span style="color:#FFD84D;">62秒</span></div>
-          <br>
-          <div class="hash">## 今朝の3行サマリ</div>
-          <div class="out">SaaS市場でAI関連の資金調達が再加速。</div>
-          <div class="out">競合A社が新機能を発表（ノーコード連携）。</div>
-          <div class="out">国内エンプラ市場の購買意欲指数が改善。</div>
-          <br>
-          <div class="hash">## あなたの会社／競合への影響</div>
-          <div class="out">A社の機能は弊社の差別化を弱める可能性。</div>
-          <div class="out">→ 今日のロードマップMTGで議題化推奨。</div>
-          <br>
-          <div class="hash">## 今日の判断に効く1件</div>
-          <div class="out">14:00 投資家MTGに向けて、A社の動向を</div>
-          <div class="out">先回りして触れておく材料になります。</div>
+        <div class="demo-header">
+          <div class="demo-num">2</div>
+          <h3>朝のニュースチェックを、1分のブリーフィングに</h3>
         </div>
-        <div class="demo-info">
-          <div class="demo-tag">DEMO 02</div>
-          <h3>朝のブリーフィングを1分で生成</h3>
-          <p>業界ニュース＋競合動向＋今日の判断材料を、あなたの事業文脈で要約。Claudeはあなたの会社をCLAUDE.mdから知っているので "経営者目線" で評価できます。</p>
-          <div class="demo-result">月7.5時間 → <strong>ほぼゼロ</strong></div>
+
+        <div class="ba-grid">
+          <div class="ba-side ba-before">
+            <span class="ba-label">これまで</span>
+            <div class="ba-time">15〜20分／日</div>
+            <ul>
+              <li>ニュースアプリを開く</li>
+              <li>Slackの未読を流し読み</li>
+              <li>業界メディアを巡回</li>
+              <li>頭が整理されないまま朝MTGへ</li>
+            </ul>
+          </div>
+          <div class="ba-arrow">→</div>
+          <div class="ba-side ba-after">
+            <span class="ba-label">これから</span>
+            <div class="ba-time">1分／日</div>
+            <ul>
+              <li>3行で今朝のサマリ</li>
+              <li>競合の動きと自社への影響</li>
+              <li>今日の判断に効く1件をピックアップ</li>
+              <li>判断モードで朝MTGへ</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="demo-result-bar">
+          <span>削減できる時間：</span>
+          <strong>月7.5時間 → ほぼゼロ</strong>
+        </div>
+
+        <div class="demo-explanation">
+          <strong>ポイント：</strong>AIはあなたの会社・事業を理解しているので、
+          単なる "ニュース要約" ではなく <strong>"経営者目線の影響分析"</strong> まで出します。
+          毎朝の "脳の起動" が、判断に直結する形に変わります。
         </div>
       </div>
 
       <!-- Demo 3 -->
       <div class="demo-card">
-        <div class="demo-visual">
-          <div class="bar"><span></span><span></span><span></span></div>
-          <div><span class="dim">$</span> <span class="prompt">claude run content_pipeline podcast_05.txt</span></div>
-          <div class="dim">  applying tone reference (3 past posts)...</div>
-          <div class="dim">  generating 4 outputs in parallel...</div>
-          <div>  ✓ done in <span style="color:#FFD84D;">2分18秒</span></div>
-          <br>
-          <div class="hash">## Generated</div>
-          <div class="out">✓ note記事 (2,340字 / 章立て4)</div>
-          <div class="out">✓ Xスレッド (7ポスト)</div>
-          <div class="out">✓ LinkedIn投稿 (680字)</div>
-          <div class="out">✓ 社内Slackサマリ (320字)</div>
-          <br>
-          <div class="dim">→ output saved to drafts/</div>
-          <div class="dim">→ tone matched to your past style</div>
-          <div class="dim">→ ready for review</div>
+        <div class="demo-header">
+          <div class="demo-num">3</div>
+          <h3>動画・Podcastを、4種類の発信物に自動展開</h3>
         </div>
-        <div class="demo-info">
-          <div class="demo-tag">DEMO 03</div>
-          <h3>動画／音声を記事＋SNS3種類に展開</h3>
-          <p>20分のPodcastから、note記事・Xスレッド・LinkedIn・社内サマリを一気に生成。あなた本人の過去投稿を参照させているので、トーンが完全一致します。</p>
-          <div class="demo-result">2.5時間 → <strong>5分</strong></div>
+
+        <div class="ba-grid">
+          <div class="ba-side ba-before">
+            <span class="ba-label">これまで</span>
+            <div class="ba-time">2〜3時間／本</div>
+            <ul>
+              <li>文字起こしを読み返す</li>
+              <li>note記事に書き直す</li>
+              <li>X投稿を作る</li>
+              <li>気力切れで結局後回し</li>
+            </ul>
+          </div>
+          <div class="ba-arrow">→</div>
+          <div class="ba-side ba-after">
+            <span class="ba-label">これから</span>
+            <div class="ba-time">5分／本</div>
+            <ul>
+              <li>note記事（章立てつき）</li>
+              <li>X投稿スレッド</li>
+              <li>LinkedIn投稿</li>
+              <li>社内Slack共有用サマリ</li>
+            </ul>
+          </div>
         </div>
+
+        <div class="demo-result-bar">
+          <span>削減できる時間：</span>
+          <strong>2.5時間 → 5分</strong>
+        </div>
+
+        <div class="demo-explanation">
+          <strong>ポイント：</strong>あなたの過去の投稿を参照させるので、
+          出力される文章は <strong>あなた自身が書いたかのようなトーン</strong> に揃います。
+          発信が止まらない経営者になれます。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Takeaways ========== -->
+<section class="takeaway-section">
+  <div class="container">
+    <div class="section-tag">120分で持ち帰れるもの</div>
+    <h2 class="section-title">参加後、明日からの<span class="accent">最初の一歩</span>が見えています。</h2>
+
+    <div class="takeaway-list">
+      <div class="takeaway-card">
+        <div class="takeaway-num">TAKEAWAY 01</div>
+        <h4>あなたの業務のどこに、月30時間が消えているかの言語化</h4>
+        <p>漠然と感じていた "時間が足りない" の正体が、具体的な業務名と時間数で見えるようになります。</p>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">TAKEAWAY 02</div>
+        <h4>明日からの最初の一歩｜どこから手をつければいいか</h4>
+        <p>3つのデモのうち、自分の業務にとって一番効くのはどれか。優先順位が決まった状態で帰れます。</p>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">TAKEAWAY 03</div>
+        <h4>あなたの業務に対する直接の質問への回答</h4>
+        <p>「うちの場合はどうしたら？」をその場で聞けます。チャット経由でも音声でも構いません。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== For/NotFor ========== -->
+<section class="fitness-section">
+  <div class="container">
+    <div class="section-tag">参加対象</div>
+    <h2 class="section-title">このライブが、<span class="accent">向いている方／向いていない方</span></h2>
+    <p class="section-lead">
+      正直にお伝えします。すべての方にお勧めできる内容ではありません。
+    </p>
+
+    <div class="fitness-grid">
+      <div class="fitness-card yes">
+        <h4>こんな経営者・意思決定層に向いています</h4>
+        <ul>
+          <li>AIに興味はあるが、何から始めればいいか分からない方</li>
+          <li>ChatGPTは試したが、自分の業務でどう活かすかが見えない方</li>
+          <li>「プログラミングが必要なら無理」と諦めている方</li>
+          <li>秘書を雇うほどではないが、雑務に追われている経営者</li>
+          <li>判断に専念できる時間を、本気で取り戻したい方</li>
+        </ul>
+      </div>
+      <div class="fitness-card no">
+        <h4>逆に、こういった方には向きません</h4>
+        <ul>
+          <li>すでにClaude Codeをバリバリ使い込んでいる方</li>
+          <li>プログラミングの技術的な深い議論を期待している方</li>
+          <li>業務改善ではなく "AIの未来予測" を聞きたい方</li>
+          <li>ライブで質問せず、一方的に情報収集だけしたい方</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -912,111 +1552,212 @@
 <!-- ========== Speaker ========== -->
 <section class="speaker-section">
   <div class="container">
-    <div class="section-tag">SPEAKER</div>
-    <h2 class="section-title">講師について</h2>
+    <div class="section-tag">講師について</div>
+    <h2 class="section-title">あなたの隣で、<span class="accent">一緒に手を動かす</span>講師</h2>
 
     <div class="speaker-card">
-      <div class="speaker-photo">〇〇<br>〇〇</div>
+      <div class="speaker-photo">講師<br>ポートレート</div>
       <div class="speaker-info">
         <h3>〇〇 〇〇</h3>
         <div class="speaker-role">AI Chief of Staff Lab. 主宰</div>
         <p>〇〇株式会社代表。Claude Codeを活用した経営者向けAI業務改善コンサルティングを行う。これまで〇〇名の経営者・意思決定層の業務自動化を支援。</p>
         <p>自身も経営者として「月30時間問題」に直面し、Claude Codeで月〇〇時間を取り戻した経験から、同じ悩みを持つ経営者向けに体系化したプログラムを提供している。</p>
-        <p style="margin-top:24px;font-size:13px;">note：[URL] ／ X：[URL]</p>
+        <p style="margin-top:24px;font-size:13px; color: var(--ink-mute);">note：[URL] ／ X：[URL]</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ========== Event details + Form ========== -->
-<section class="event-section" id="signup">
+<!-- ========== Voices (placeholder) ========== -->
+<section class="voices-section">
   <div class="container">
-    <div class="section-tag" style="color:#FFD84D;">REGISTRATION</div>
-    <h2 class="section-title">開催概要・お申し込み</h2>
-    <p class="section-lead">参加費は¥10,000（β価格・税込）。次回以降は¥29,800に上がる予定です。</p>
+    <div class="section-tag">参加者の声</div>
+    <h2 class="section-title">経営者からの<span class="accent">フィードバック</span></h2>
 
-    <div class="event-grid">
-      <div class="event-details">
-        <dl>
-          <dt>開催日時</dt><dd>〇月〇日（〇）19:00〜21:00</dd>
-          <dt>所要時間</dt><dd>120分（休憩なし）</dd>
-          <dt>形式</dt><dd>Zoomオンライン（カメラON任意）</dd>
-          <dt>定員</dt><dd>30名（先着）</dd>
-          <dt>録画</dt><dd>あり／参加者には1か月間限定公開</dd>
-          <dt>持ち物</dt><dd>PCとメモ用紙のみ</dd>
-          <dt>参加費</dt><dd><span class="price">¥10,000<small>税込／β価格</small></span></dd>
-        </dl>
+    <div class="voices-list">
+      <div class="voice-card">
+        <p class="voice-quote">「ChatGPTを2年触ってきましたが、なぜ続かなかったかが120分で腑に落ちました。"覚え続ける" という発想が、これほど経営者の業務に効くとは。」</p>
+        <div class="voice-author">
+          <div class="voice-avatar">A.M</div>
+          <div>
+            <div class="voice-name">A.M さん</div>
+            <div class="voice-role">SaaS企業 CEO</div>
+          </div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <p class="voice-quote">「秘書を雇うか悩んでいたタイミングで参加。3つのデモを見た瞬間に "これでいい、もう秘書は雇わない" と決められました。」</p>
+        <div class="voice-author">
+          <div class="voice-avatar">K.S</div>
+          <div>
+            <div class="voice-name">K.S さん</div>
+            <div class="voice-role">士業事務所 代表</div>
+          </div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <p class="voice-quote">「"自分にもできる" と思える瞬間が3回ありました。技術的な話ではなく、経営者の業務として説明してくれる構成が秀逸。」</p>
+        <div class="voice-author">
+          <div class="voice-avatar">T.N</div>
+          <div>
+            <div class="voice-name">T.N さん</div>
+            <div class="voice-role">製造業 取締役</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="voices-disclaimer">※ β期間中の参加者からのコメントです。社名は許諾範囲で表記しています。</p>
+  </div>
+</section>
+
+<!-- ========== Offer / Pricing ========== -->
+<section class="offer-section" id="offer">
+  <div class="container">
+    <div class="section-tag" style="color: var(--highlight);">参加費とサービス内容</div>
+    <h2 class="section-title">経営者の月30時間と、<span class="accent">¥10,000</span>を交換します。</h2>
+    <p class="section-lead">
+      投資効果は明白です。年商1億円規模の経営者の方の時間単価で計算すると、月30時間は約45万円相当。
+      実質 <strong style="color: var(--highlight);">45倍のレバレッジ</strong> がかかる120分です。
+    </p>
+
+    <div class="offer-card">
+      <h3 style="font-size: 22px; margin-bottom: 24px;">この120分に含まれるもの</h3>
+
+      <div class="offer-stack">
+        <div class="stack-item">
+          <div class="stack-name">
+            ライブ実演デモ × 3本
+            <span class="desc">議事録／朝のブリーフ／コンテンツ展開</span>
+          </div>
+          <div class="stack-price">通常 ¥30,000相当</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-name">
+            あなたの業務への直接Q&amp;A
+            <span class="desc">チャット・音声どちらでも</span>
+          </div>
+          <div class="stack-price">通常 ¥15,000相当</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-name">
+            録画 1か月限定アクセス
+            <span class="desc">後日復習・社内共有可</span>
+          </div>
+          <div class="stack-price">通常 ¥8,000相当</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-name">
+            無料個別診断（15分）の優先枠
+            <span class="desc">参加者のみ予約可・希望者限定</span>
+          </div>
+          <div class="stack-price">通常 ¥20,000相当</div>
+        </div>
       </div>
 
-      <form class="signup-form" onsubmit="event.preventDefault(); alert('（プレビュー画面です。Stripeへの遷移は本番LPで実装します。）');">
-        <h3>お申し込みフォーム</h3>
-        <p class="form-lead">送信後、Stripeで決済 → 確認メールが自動送信されます（1分）</p>
+      <div class="stack-total">
+        <span class="label">通常価格 合計</span>
+        <span class="value">¥73,000</span>
+      </div>
 
-        <div class="form-row">
-          <label>お名前 <span class="required">必須</span></label>
-          <input type="text" placeholder="山田 太郎" required>
-        </div>
-        <div class="form-row">
-          <label>メールアドレス <span class="required">必須</span></label>
-          <input type="email" placeholder="you@example.com" required>
-        </div>
-        <div class="form-row">
-          <label>会社名／役職 <span class="required">必須</span></label>
-          <input type="text" placeholder="株式会社〇〇／代表取締役" required>
-        </div>
-        <div class="form-row">
-          <label>業種</label>
-          <select>
-            <option>選択してください</option>
-            <option>SaaS／IT</option>
-            <option>製造業</option>
-            <option>サービス業</option>
-            <option>士業／コンサル</option>
-            <option>その他</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label>業務上の悩みTOP3（任意・デモ素材として活用）</label>
-          <textarea placeholder="例：議事録の整理に時間がかかる／朝の情報収集が散漫／発信のテキスト化が止まる"></textarea>
-        </div>
+      <div class="offer-price">
+        <div class="offer-price-label">β価格・先着30名様限定</div>
+        <div class="offer-price-num">¥10,000<small>税込</small></div>
+        <div class="offer-price-meta">次回開催からは正規価格 ¥29,800 となります</div>
+      </div>
 
-        <button type="submit" class="form-submit">¥10,000で参加を申し込む →</button>
-        <p class="form-note">クレジットカード決済（Stripe）／領収書自動発行／開催3日前まで全額返金</p>
-      </form>
+      <div class="guarantee-box">
+        <div class="guarantee-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 12l2 2 4-4"/><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="guarantee-text">
+          <strong>3日前まで全額返金保証</strong>
+          <p>「想像していた内容と違った」場合、開催3日前までであれば全額返金いたします。あなたにリスクは一切ありません。</p>
+        </div>
+      </div>
     </div>
+  </div>
+</section>
+
+<!-- ========== Form ========== -->
+<section class="form-section" id="signup">
+  <div class="container">
+    <form class="signup-form" onsubmit="event.preventDefault(); alert('（プレビュー画面です。本番ではStripe決済に遷移します。）');">
+      <h3>お申し込みフォーム</h3>
+      <p class="form-lead">送信後、Stripeで決済 → 確認メール（1分以内）</p>
+
+      <div class="form-row">
+        <label>お名前 <span class="required">必須</span></label>
+        <input type="text" placeholder="山田 太郎" required>
+      </div>
+      <div class="form-row">
+        <label>メールアドレス <span class="required">必須</span></label>
+        <input type="email" placeholder="you@example.com" required>
+      </div>
+      <div class="form-row">
+        <label>会社名／役職 <span class="required">必須</span></label>
+        <input type="text" placeholder="株式会社〇〇／代表取締役" required>
+      </div>
+      <div class="form-row">
+        <label>業種</label>
+        <select>
+          <option>選択してください</option>
+          <option>SaaS／IT</option>
+          <option>製造業</option>
+          <option>サービス業</option>
+          <option>士業／コンサル</option>
+          <option>小売・EC</option>
+          <option>その他</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>業務上の悩みTOP3（任意）</label>
+        <textarea placeholder="例：議事録の整理に時間がかかる／朝の情報収集が散漫／発信のテキスト化が止まる"></textarea>
+        <p style="font-size: 12px; color: var(--ink-mute); margin-top: 6px;">いただいた内容は、当日のデモ素材として優先的に取り上げます。</p>
+      </div>
+
+      <button type="submit" class="form-submit">¥10,000 で参加を申し込む  →</button>
+      <p class="form-note">クレジットカード決済（Stripe）／領収書自動発行<br>開催3日前まで全額返金可</p>
+    </form>
   </div>
 </section>
 
 <!-- ========== FAQ ========== -->
 <section class="faq-section">
-  <div class="container">
+  <div class="container-narrow">
     <div class="section-tag">FAQ</div>
     <h2 class="section-title">よくある質問</h2>
 
     <div class="faq-list">
       <div class="faq-item">
-        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">ITが苦手な経営者でも大丈夫ですか？</button>
-        <div class="faq-a"><p>はい、まったく問題ありません。受講者の7割はExcelの関数を書いたことがないレベルの方です。プログラミング経験は一切不要です。必要なのは、部下に指示を出すスキル＝経営者の本業です。</p></div>
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q1</span>ITが苦手な経営者でも、本当に大丈夫ですか？</span></button>
+        <div class="faq-a"><p>はい、まったく問題ありません。受講者の7割はExcelの関数を書いたことがないレベルの方です。プログラミング経験は一切不要。必要なのは、部下に指示を出すスキル＝経営者の本業です。当日のデモを見ていただければ「自分にもできる」と腑に落ちます。</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">ChatGPTを使っているのですが、何が違うのですか？</button>
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q2</span>ChatGPTを使っているのですが、何が違うのですか？</span></button>
         <div class="faq-a"><p>ChatGPTは "1回1回の会話" の道具、Claude Codeは "あなたの会社・性格・好みを覚え続ける" 道具です。月30時間の差はそこから生まれます。当日のデモで具体的にお見せします。</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">当日参加できなかった場合、録画は見られますか？</button>
-        <div class="faq-a"><p>はい、参加申込者には開催後24時間以内に録画リンクをお送りします。1か月間視聴可能です。</p></div>
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q3</span>当日参加できなかった場合、録画は見られますか？</span></button>
+        <div class="faq-a"><p>はい。参加申込者には開催後24時間以内に録画リンクをお送りします。1か月間視聴可能です。リアルタイムで参加できない方も、申込いただいて構いません。</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">参加後に追加の有料サービスのセールスはありますか？</button>
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q4</span>参加後に追加の有料サービスのセールスはありますか？</span></button>
         <div class="faq-a"><p>当日120分のうち、最後の20分で「AI顧問サービス」のご紹介と15分の無料個別診断のご案内をします。それ以外の100分は完全に実演とQ&Aです。希望されない方は最後の20分を聞かずに退出していただいて構いません。</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">法人で経費精算したいのですが、領収書は出ますか？</button>
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q5</span>機密情報をAIに渡しても大丈夫ですか？</span></button>
+        <div class="faq-a"><p>Anthropic社（Claudeの提供元）は、APIで送られたデータを学習に使わないことを契約で明示しています。社内の機密情報・顧客情報を扱うクライアントが多くいらっしゃいますが、運用上の注意点もデモ内でお話しします。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q6</span>法人で経費精算したいのですが、領収書は出ますか？</span></button>
         <div class="faq-a"><p>はい、Stripeから自動発行される領収書をお送りします。会社名で発行可能です。</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">返金はできますか？</button>
-        <div class="faq-a"><p>開催3日前までのキャンセルは全額返金。それ以降は録画提供での対応とさせていただきます。</p></div>
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q7</span>返金はできますか？</span></button>
+        <div class="faq-a"><p>開催3日前までのキャンセルは全額返金いたします。それ以降は録画提供での対応とさせていただきます。「想像と違った」というご感想だけでも返金理由として十分です。</p></div>
       </div>
     </div>
   </div>
@@ -1024,9 +1765,13 @@
 
 <!-- ========== Final CTA ========== -->
 <section class="final-cta">
-  <div class="container">
-    <h2>30時間を取り戻すか、<br>来月も同じ業務に追われるか。</h2>
-    <p>今日このページを閉じても、明日からの業務は何も変わりません。120分後に景色を変えるかどうかを決められるのは、あなただけです。</p>
+  <div class="container-narrow">
+    <h2><span class="accent">30時間を取り戻す</span>か、<br>来月も同じ業務に追われるか。</h2>
+    <p>
+      今日このページを閉じても、明日からの業務は何も変わりません。<br>
+      来月の役員会も、また30分かけて議事録を整理することになります。<br>
+      120分後にその景色を変えるかどうかを決められるのは、あなただけです。
+    </p>
     <a href="#signup" class="cta-primary">¥10,000で参加を申し込む</a>
   </div>
 </section>
