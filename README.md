@@ -1,0 +1,2 @@
+# ai_coach_for_manager
+経営者・意思決定者層向けのClaudeCode塾に関するレポジトリ
