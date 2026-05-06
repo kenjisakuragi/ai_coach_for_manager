@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Chief of Staff Lab.｜LP一覧（管理用）</title>
+<meta name="robots" content="noindex,nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #FFF9EE;
+    font-family: 'Noto Sans JP', sans-serif;
+    color: #2A2419;
+    line-height: 1.8;
+    padding: 60px 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 880px; margin: 0 auto; }
+  h1 {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-weight: 900;
+    font-size: 40px;
+    margin-bottom: 16px;
+  }
+  h1 .accent { color: #E5701F; }
+  .subtitle {
+    font-size: 16px;
+    color: #4D5862;
+    margin-bottom: 48px;
+  }
+  .notice {
+    background: #FFE9B8;
+    border: 2px dashed #E5701F;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+    font-size: 14px;
+    color: #2A2419;
+  }
+  .notice strong { color: #E5701F; }
+  .section {
+    margin-bottom: 40px;
+  }
+  .section h2 {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 24px;
+    margin-bottom: 16px;
+    border-bottom: 3px solid #FFD84D;
+    padding-bottom: 8px;
+  }
+  .lp-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .lp-card {
+    background: white;
+    border: 2px solid #2A2419;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 4px 4px 0 #2A2419;
+    transition: transform 0.15s;
+    text-decoration: none;
+    color: #2A2419;
+    display: block;
+  }
+  .lp-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 #2A2419;
+  }
+  .lp-card .badge {
+    display: inline-block;
+    background: #FF8C42;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+  .lp-card.coconala .badge { background: #E55A4B; }
+  .lp-card.jv-a .badge { background: #5CB85C; }
+  .lp-card.jv-b .badge { background: #1E3A5F; }
+  .lp-card .title {
+    font-weight: 900;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .lp-card .url {
+    font-family: monospace;
+    font-size: 12px;
+    color: #8A929A;
+    word-break: break-all;
+  }
+  .lp-card .desc {
+    font-size: 13px;
+    color: #4D5862;
+    margin-top: 8px;
+  }
+  .extras {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .extra-card {
+    background: #2A2419;
+    color: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    text-align: center;
+    transition: transform 0.15s;
+  }
+  .extra-card:hover { transform: translateY(-2px); }
+  .extra-card .emoji { font-size: 28px; margin-bottom: 4px; line-height: 1; }
+  .extra-card .label { font-size: 13px; font-weight: 700; }
+  footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px dashed #8A929A;
+    font-size: 12px;
+    color: #8A929A;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>AI Chief of Staff Lab.<br>LP一覧 <span class="accent">（管理用）</span></h1>
+  <p class="subtitle">経営者向け Claude Code 活用ライブの各LPバリエーション。検証フェーズ用の集約ページです。</p>
+
+  <div class="notice">
+    <strong>⚠️ noindex 設定済み</strong>：このページは検索エンジンには登録されません。社内・JVパートナー共有用。各LPの直リンクのみ外部に共有してください。
+  </div>
+
+  <div class="section">
+    <h2>📍 公開中のLP（4種類）</h2>
+    <div class="lp-grid">
+
+      <a href="./lp/v1/" class="lp-card">
+        <span class="badge">標準版</span>
+        <div class="title">v1｜標準LP</div>
+        <div class="url">/lp/v1/</div>
+        <div class="desc">基本のLP。すべての訴求要素を網羅。SNS発信・自分のメルマガ用。</div>
+      </a>
+
+      <a href="./lp/coconala/" class="lp-card coconala">
+        <span class="badge">ココナラ用</span>
+        <div class="title">coconala｜ココナラ経由用</div>
+        <div class="url">/lp/coconala/</div>
+        <div class="desc">ココナラ経由の流入向け。2時間レッスンの存在を強調。</div>
+      </a>
+
+      <a href="./lp/jv-a/" class="lp-card jv-a">
+        <span class="badge">JV-A 用</span>
+        <div class="title">jv-a｜JVパートナーA経由用</div>
+        <div class="url">/lp/jv-a/</div>
+        <div class="desc">JVパートナーAのメルマガ向け。冒頭に [パートナー名] 表記。</div>
+      </a>
+
+      <a href="./lp/jv-b/" class="lp-card jv-b">
+        <span class="badge">JV-B 用</span>
+        <div class="title">jv-b｜JVパートナーB経由用</div>
+        <div class="url">/lp/jv-b/</div>
+        <div class="desc">JVパートナーBのメルマガ向け。冒頭に [パートナー名] 表記。</div>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🎬 関連ページ</h2>
+    <div class="extras">
+      <a href="./slides/" class="extra-card">
+        <div class="emoji">🎤</div>
+        <div class="label">ウェビナースライド</div>
+      </a>
+      <a href="./marketplace_preview/main.html" class="extra-card">
+        <div class="emoji">🖼️</div>
+        <div class="label">サムネ画像</div>
+      </a>
+      <a href="./marketplace_preview/sub.html" class="extra-card">
+        <div class="emoji">🖼️</div>
+        <div class="label">サブ画像6種</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>📊 検証KPI（30日間）</h2>
+    <ul style="font-size: 14px; line-height: 2; padding-left: 24px;">
+      <li>各LPの表示回数（Cloudflare Analytics or Google Analytics 連携）</li>
+      <li>申込CTAボタンクリック数（Stripe Payment Link 紐付け後）</li>
+      <li>申込CVR：1〜3%が目安</li>
+      <li>30日後にwinner決定 → 統合</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>🔧 編集の流れ</h2>
+    <ul style="font-size: 14px; line-height: 2; padding-left: 24px;">
+      <li>各LPの編集 → <code>lp/[variant]/index.html</code> をGitで編集</li>
+      <li>commit & push → 数分で自動デプロイ</li>
+      <li>新しいバリエーション追加 → <code>lp/[新variant]/</code> を作成</li>
+    </ul>
+  </div>
+
+  <footer>
+    AI Chief of Staff Lab.｜桜木 健二｜2026<br>
+    管理リポジトリ：<a href="https://github.com/kenjisakuragi/ai_coach_for_manager" style="color: #8A929A;">github.com/kenjisakuragi/ai_coach_for_manager</a>
+  </footer>
+
+</div>
+</body>
+</html>
