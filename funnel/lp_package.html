@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動経営 導入パッケージ｜3か月で経営者の業務を半分にする</title>
+<meta name="description" content="スモールビジネスオーナー向けの3か月集中AI導入プログラム。月60-90時間の雑務時間を取り戻し、経営判断に専念できる体制を構築します。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF7F0;
+    --bg-soft: #F2EDE0;
+    --paper: #FFFFFF;
+    --navy: #1A2B4C;
+    --navy-deep: #0F1B33;
+    --ink: #1F2937;
+    --ink-soft: #4A5563;
+    --ink-mute: #8A929A;
+    --gold: #B8915A;
+    --gold-deep: #8B6F47;
+    --gold-soft: #E8DCC4;
+    --line: #E0DAC8;
+    --green: #2E7D5B;
+    --red: #B8403F;
+    --highlight: #FFE9A8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans JP', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.95;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "palt";
+  }
+  h1, h2, h3, h4, .serif {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 900;
+    line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  .container { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+  .container-narrow { max-width: 820px; margin: 0 auto; padding: 0 32px; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(250, 247, 240, 0.96);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .header-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 32px; max-width: 1080px; margin: 0 auto;
+  }
+  .logo { font-family: 'Noto Serif JP', serif; font-weight: 900; font-size: 18px; color: var(--navy); }
+  .logo .accent { color: var(--gold); }
+  .header-cta {
+    background: var(--navy); color: white; padding: 11px 24px;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.05em;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 96px 0 120px;
+    position: relative; overflow: hidden;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+  }
+  .hero::before {
+    content: ""; position: absolute; top: 80px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(184, 145, 90, 0.08) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block; border: 1px solid var(--gold);
+    padding: 6px 16px; font-size: 12px; font-weight: 700;
+    color: var(--gold-deep); margin-bottom: 32px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .hero h1 {
+    font-size: clamp(36px, 5vw, 56px);
+    color: var(--navy); margin-bottom: 28px;
+  }
+  .hero h1 .accent {
+    color: var(--gold-deep);
+    border-bottom: 4px solid var(--gold);
+    padding-bottom: 4px;
+  }
+  .hero h1 .num {
+    font-family: 'Noto Serif JP', serif;
+    color: var(--navy); font-size: 1.3em; font-weight: 900;
+  }
+  .hero-sub {
+    font-size: 18px; color: var(--ink-soft);
+    max-width: 660px; margin-bottom: 48px; line-height: 2;
+  }
+  .hero-sub strong { color: var(--navy); font-weight: 700; }
+  .hero-info {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    background: var(--paper); border: 1px solid var(--line);
+    margin-bottom: 48px;
+    box-shadow: 0 8px 32px rgba(26, 43, 76, 0.06);
+  }
+  .hero-info-item {
+    padding: 24px 20px; text-align: center;
+    border-right: 1px solid var(--line);
+  }
+  .hero-info-item:last-child { border-right: none; }
+  .hero-info-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 32px; font-weight: 900;
+    color: var(--navy); line-height: 1; margin-bottom: 8px;
+  }
+  .hero-info-num small { font-size: 14px; color: var(--ink-soft); margin-left: 2px; font-weight: 700; }
+  .hero-info-label { font-size: 11px; color: var(--ink-soft); font-weight: 700; letter-spacing: 0.05em; }
+  .cta-primary {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: var(--navy); color: white;
+    padding: 18px 44px; font-size: 15px; font-weight: 700;
+    letter-spacing: 0.05em; border: 2px solid var(--navy);
+    transition: background 0.2s, transform 0.15s;
+  }
+  .cta-primary:hover { background: var(--navy-deep); transform: translateY(-1px); }
+  .cta-primary::after { content: "→"; font-size: 18px; }
+  .cta-secondary {
+    display: inline-flex; align-items: center; gap: 12px;
+    border: 2px solid var(--gold); color: var(--gold-deep);
+    padding: 16px 32px; font-size: 14px; font-weight: 700;
+    letter-spacing: 0.05em; margin-left: 16px;
+    transition: background 0.2s;
+  }
+  .cta-secondary:hover { background: var(--gold-soft); }
+  .cta-meta { margin-top: 18px; font-size: 13px; color: var(--ink-soft); }
+
+  /* Section base */
+  section { padding: 96px 0; }
+  .section-eyebrow {
+    font-size: 11px; font-weight: 700; color: var(--gold-deep);
+    letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 16px;
+  }
+  .section-eyebrow::before { content: "— "; }
+  .section-eyebrow::after { content: " —"; }
+  .section-title {
+    font-size: clamp(28px, 3.6vw, 40px); color: var(--navy); margin-bottom: 24px;
+  }
+  .section-title .accent { color: var(--gold-deep); }
+  .section-lead {
+    font-size: 16px; color: var(--ink-soft); max-width: 720px;
+    margin-bottom: 56px; line-height: 2;
+  }
+
+  /* Pillars */
+  .pillars { background: var(--paper); }
+  .pillars-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+    margin-top: 48px;
+  }
+  .pillar-card {
+    padding: 36px 32px; border-top: 3px solid var(--gold);
+    background: var(--bg);
+  }
+  .pillar-num {
+    font-family: 'Noto Serif JP', serif; font-size: 13px;
+    font-weight: 700; color: var(--gold-deep);
+    letter-spacing: 0.15em; margin-bottom: 16px;
+  }
+  .pillar-card h3 { font-size: 24px; color: var(--navy); margin-bottom: 16px; }
+  .pillar-card p { font-size: 15px; color: var(--ink-soft); line-height: 1.95; }
+
+  /* 3-Month Roadmap */
+  .roadmap { background: var(--bg-soft); }
+  .roadmap-list {
+    display: flex; flex-direction: column; gap: 24px;
+    margin-top: 56px;
+  }
+  .roadmap-item {
+    background: var(--paper); padding: 36px 40px;
+    border-left: 4px solid var(--gold);
+    display: grid; grid-template-columns: auto 1fr; gap: 32px;
+    align-items: start;
+  }
+  .roadmap-month {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 56px; font-weight: 900;
+    color: var(--gold); line-height: 1; min-width: 120px;
+  }
+  .roadmap-content h3 {
+    font-size: 22px; color: var(--navy); margin-bottom: 12px;
+  }
+  .roadmap-content p { font-size: 15px; color: var(--ink-soft); margin-bottom: 12px; }
+  .roadmap-content .tag {
+    display: inline-block; background: var(--bg-soft);
+    padding: 4px 12px; font-size: 12px; color: var(--gold-deep);
+    margin-right: 8px; margin-top: 4px; border: 1px solid var(--gold-soft);
+  }
+
+  /* Pricing tiers */
+  .pricing { background: var(--paper); }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    margin-top: 56px;
+  }
+  .price-card {
+    background: var(--paper); border: 1px solid var(--line);
+    padding: 40px 32px; position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .price-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(26, 43, 76, 0.08); }
+  .price-card.recommended {
+    border: 2px solid var(--gold); background: var(--bg);
+    transform: scale(1.02);
+  }
+  .price-card.recommended::before {
+    content: "推奨";
+    position: absolute; top: -12px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold); color: white;
+    padding: 4px 16px; font-size: 11px;
+    font-weight: 900; letter-spacing: 0.1em;
+  }
+  .price-tier {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px; font-weight: 700;
+    color: var(--gold-deep); letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+  .price-name { font-size: 22px; color: var(--navy); margin-bottom: 16px; }
+  .price-amount {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 40px; font-weight: 900; color: var(--navy);
+    line-height: 1; margin-bottom: 8px;
+  }
+  .price-amount small { font-size: 0.4em; color: var(--ink-soft); margin-left: 4px; font-weight: 700; }
+  .price-period { font-size: 13px; color: var(--ink-soft); margin-bottom: 24px; }
+  .price-features { list-style: none; padding: 0; margin-bottom: 32px; border-top: 1px solid var(--line); padding-top: 24px; }
+  .price-features li {
+    padding: 8px 0 8px 24px; position: relative;
+    font-size: 14px; color: var(--ink); line-height: 1.7;
+  }
+  .price-features li::before {
+    content: "✓"; position: absolute; left: 0; top: 8px;
+    color: var(--green); font-weight: 900;
+  }
+  .price-cta {
+    display: block; text-align: center; padding: 14px;
+    background: var(--navy); color: white; font-weight: 700;
+    font-size: 14px; letter-spacing: 0.05em;
+    transition: background 0.2s;
+  }
+  .price-cta:hover { background: var(--navy-deep); }
+  .price-card.recommended .price-cta { background: var(--gold); }
+  .price-card.recommended .price-cta:hover { background: var(--gold-deep); }
+
+  /* Speaker */
+  .speaker-section { background: var(--bg-soft); }
+  .speaker-card {
+    display: grid; grid-template-columns: 220px 1fr;
+    gap: 64px; align-items: center; margin-top: 48px;
+  }
+  .speaker-photo {
+    width: 220px; height: 280px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--gold) 100%);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-family: 'Noto Serif JP', serif;
+    font-size: 24px; font-weight: 900;
+    text-align: center; line-height: 1.3; position: relative;
+  }
+  .speaker-photo::after {
+    content: ""; position: absolute; inset: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.4); pointer-events: none;
+  }
+  .speaker-info h3 { font-size: 32px; margin-bottom: 4px; color: var(--navy); }
+  .speaker-reading { color: var(--gold-deep); font-size: 14px; margin-bottom: 24px; letter-spacing: 0.05em; }
+  .speaker-info p { color: var(--ink); margin-bottom: 14px; font-size: 15.5px; line-height: 2; }
+  .speaker-info p strong { color: var(--navy); font-weight: 700; }
+
+  /* For/NotFor */
+  .fitness-section { background: var(--paper); }
+  .fitness-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; }
+  .fitness-card { padding: 36px 32px; border-top: 2px solid var(--navy); }
+  .fitness-card.no { border-top-color: var(--ink-mute); opacity: 0.85; }
+  .fitness-card h4 { font-size: 20px; margin-bottom: 24px; color: var(--navy); }
+  .fitness-card.no h4 { color: var(--ink-soft); }
+  .fitness-card ul { list-style: none; padding: 0; }
+  .fitness-card li {
+    padding: 12px 0 12px 32px; position: relative;
+    font-size: 15px; color: var(--ink);
+    border-bottom: 1px dashed var(--line); line-height: 1.85;
+  }
+  .fitness-card li:last-child { border-bottom: none; }
+  .fitness-card.yes li::before { content: "✓"; position: absolute; left: 0; top: 12px; color: var(--green); font-weight: 900; font-size: 18px; }
+  .fitness-card.no li::before { content: "✕"; position: absolute; left: 0; top: 12px; color: var(--ink-mute); font-weight: 900; font-size: 16px; }
+
+  /* FAQ */
+  .faq-section { background: var(--bg-soft); }
+  .faq-list { margin-top: 48px; }
+  .faq-item { border-top: 1px solid var(--line); }
+  .faq-item:last-child { border-bottom: 1px solid var(--line); }
+  .faq-q {
+    width: 100%; text-align: left; background: none; border: none;
+    padding: 24px 8px; font-size: 16px; font-weight: 700; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: inherit; color: var(--navy); gap: 16px;
+  }
+  .faq-q::after { content: "+"; font-size: 24px; color: var(--gold); transition: transform 0.2s; flex-shrink: 0; }
+  .faq-item.open .faq-q::after { transform: rotate(45deg); }
+  .faq-q .faq-label { font-family: 'Noto Serif JP', serif; color: var(--gold-deep); font-size: 13px; font-weight: 700; margin-right: 12px; flex-shrink: 0; letter-spacing: 0.1em; }
+  .faq-q span { display: flex; align-items: center; flex: 1; }
+  .faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    color: var(--ink-soft); font-size: 14.5px;
+    padding: 0 8px; line-height: 1.95;
+  }
+  .faq-item.open .faq-a { max-height: 600px; padding: 4px 8px 24px; }
+
+  /* Final CTA */
+  .final-cta { background: var(--navy); color: white; padding: 120px 0; text-align: center; }
+  .final-cta h2 {
+    font-size: clamp(30px, 4vw, 44px); color: white; margin-bottom: 32px;
+  }
+  .final-cta h2 .accent { color: var(--gold); }
+  .final-cta p {
+    font-size: 17px; color: rgba(255, 255, 255, 0.85);
+    max-width: 640px; margin: 0 auto 40px; line-height: 2;
+  }
+  .final-cta .cta-primary { background: var(--gold); border-color: var(--gold); }
+  .final-cta .cta-primary:hover { background: var(--gold-deep); border-color: var(--gold-deep); }
+
+  /* Footer */
+  footer { background: var(--navy-deep); color: rgba(255, 255, 255, 0.6); padding: 56px 0; font-size: 13px; }
+  footer .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  footer a { color: rgba(255, 255, 255, 0.6); margin-left: 24px; }
+
+  @media (max-width: 768px) {
+    .hero { padding: 56px 0 80px; }
+    .hero-info { grid-template-columns: repeat(2, 1fr); }
+    .hero-info-item { border-right: none; border-bottom: 1px solid var(--line); }
+    .hero-info-item:nth-child(odd) { border-right: 1px solid var(--line); }
+    .hero-info-item:nth-last-child(-n+2) { border-bottom: none; }
+    .pillars-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .price-card.recommended { transform: none; }
+    .fitness-grid { grid-template-columns: 1fr; }
+    .speaker-card { grid-template-columns: 1fr; gap: 32px; text-align: center; }
+    .speaker-photo { margin: 0 auto; width: 180px; height: 240px; }
+    .roadmap-item { grid-template-columns: 1fr; gap: 16px; }
+    section { padding: 64px 0; }
+    .cta-secondary { margin-left: 0; margin-top: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">AI駆動経営<span class="accent">ラボ</span></a>
+    <a href="#contact" class="header-cta">無料相談を予約</a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-tag">スモールビジネスオーナー向け｜3か月集中プログラム</div>
+    <h1>
+      <span class="num">3</span>か月で、<br>
+      経営者の業務を<span class="accent">半分</span>にする。
+    </h1>
+    <p class="hero-sub">
+      議事録、朝のニュース、顧客対応、提案書づくり——。<br>
+      経営者から月60〜90時間を奪う <strong>"雑務"</strong> をAIに任せ、<br>
+      <strong>判断と決断に専念できる体制</strong> を3か月で構築します。
+    </p>
+    <div class="hero-info">
+      <div class="hero-info-item">
+        <div class="hero-info-num">90<small>日</small></div>
+        <div class="hero-info-label">集中プログラム</div>
+      </div>
+      <div class="hero-info-item">
+        <div class="hero-info-num">10<small>本</small></div>
+        <div class="hero-info-label">自動化スキル</div>
+      </div>
+      <div class="hero-info-item">
+        <div class="hero-info-num">¥390K<small>〜</small></div>
+        <div class="hero-info-label">3つの料金プラン</div>
+      </div>
+      <div class="hero-info-item">
+        <div class="hero-info-num">3<small>名</small></div>
+        <div class="hero-info-label">月の受け入れ枠</div>
+      </div>
+    </div>
+    <a href="#contact" class="cta-primary">無料相談を予約する</a>
+    <a href="#pricing" class="cta-secondary">料金プランを見る</a>
+    <p class="cta-meta">✓ 30日返金保証｜✓ 個別カスタマイズ｜✓ 法人カード対応</p>
+  </div>
+</section>
+
+<!-- Three Pillars -->
+<section class="pillars">
+  <div class="container">
+    <div class="section-eyebrow">3つの柱</div>
+    <h2 class="section-title">経営者の業務を、<span class="accent">3つの軸</span>で立て直す</h2>
+    <p class="section-lead">
+      時間を取り戻す。判断の質を上げる。属人化を解消する。<br>
+      この3つを並行で進めることで、3か月後に "判断に専念できる経営者" が実現します。
+    </p>
+
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-num">PILLAR 01</div>
+        <h3>時間削減</h3>
+        <p>非生産的な業務（議事録、ニュース、下書き、転記）をAIに渡し、月20〜40時間を取り戻します。1つの自動化で、毎日の負担が劇的に変わります。</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">PILLAR 02</div>
+        <h3>意思決定支援</h3>
+        <p>経営判断に必要な情報をAIが整理し、論点を提示。"壁打ち相手がいない孤独" を解消し、判断の質とスピードを同時に向上させます。</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">PILLAR 03</div>
+        <h3>見える化</h3>
+        <p>クライアント情報・案件・約束事をAIが参照可能な状態に。"頭の中だけで経営" している状態を、引き継ぎ可能な組織資産に変えます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3-Month Roadmap -->
+<section class="roadmap">
+  <div class="container">
+    <div class="section-eyebrow">3か月のロードマップ</div>
+    <h2 class="section-title">90日で到達する <span class="accent">3つの景色</span></h2>
+    <p class="section-lead">
+      最初の1か月で時間を取り戻す。次の1か月で頭の中を整理する。<br>
+      最後の1か月で判断の質を上げ、4か月目以降の自走を準備する。
+    </p>
+
+    <div class="roadmap-list">
+      <div class="roadmap-item">
+        <div class="roadmap-month">第1月</div>
+        <div class="roadmap-content">
+          <h3>時間削減フェーズ｜目に見える時間を取り戻す</h3>
+          <p>環境構築から始めて、4本の基本スキル（議事録／朝のブリーフ／メール／コンテンツ）を実装。月15〜25時間の取り戻しを体感します。</p>
+          <div>
+            <span class="tag">議事録自動化</span>
+            <span class="tag">朝のブリーフィング</span>
+            <span class="tag">メール下書き</span>
+            <span class="tag">コンテンツ展開</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-month">第2月</div>
+        <div class="roadmap-content">
+          <h3>見える化フェーズ｜頭の中を整理する</h3>
+          <p>クライアント情報・案件・KPIをNotionに構造化。"あれ誰だっけ" を3秒で解決し、3日休んでも回せる状態の入り口を作ります。</p>
+          <div>
+            <span class="tag">クライアントDB</span>
+            <span class="tag">案件管理</span>
+            <span class="tag">KPIダッシュボード</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-month">第3月</div>
+        <div class="roadmap-content">
+          <h3>意思決定支援＋自走化フェーズ</h3>
+          <p>3パターンの壁打ちフローを確立。採用・営業・経理の半自動化を構築し、4か月目以降の運用ルールを設計します。</p>
+          <div>
+            <span class="tag">壁打ちフロー</span>
+            <span class="tag">採用・人事</span>
+            <span class="tag">営業・経理</span>
+            <span class="tag">運用引き継ぎ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-eyebrow">料金プラン</div>
+    <h2 class="section-title">3つの料金プラン</h2>
+    <p class="section-lead">
+      経営者の事業ステージ・予算感に合わせた3ティア構成。<br>
+      最初は迷いやすいので、推奨は <strong>スタンダード</strong> です。
+    </p>
+
+    <div class="pricing-grid">
+      <!-- Starter -->
+      <div class="price-card">
+        <div class="price-tier">TIER 01</div>
+        <div class="price-name">スターター</div>
+        <div class="price-amount">¥180,000<small>税込</small></div>
+        <div class="price-period">1か月集中・スキル4本</div>
+        <ul class="price-features">
+          <li>キックオフ＋週1回 90分セッション × 4回</li>
+          <li>Claude Code 基本スキル4本構築</li>
+          <li>CLAUDE.md カスタマイズ</li>
+          <li>30日間Slack質問サポート</li>
+          <li>1か月成果レポート</li>
+        </ul>
+        <a href="#contact" class="price-cta">無料相談を予約する</a>
+      </div>
+
+      <!-- Standard -->
+      <div class="price-card recommended">
+        <div class="price-tier">TIER 02</div>
+        <div class="price-name">スタンダード</div>
+        <div class="price-amount">¥390,000<small>税込</small></div>
+        <div class="price-period">3か月・スキル10本</div>
+        <ul class="price-features">
+          <li>Day 0キックオフ＋週1回 90分セッション × 12回</li>
+          <li>Claude Code スキル10本構築（全領域カバー）</li>
+          <li>Notion DB構築（クライアント／案件／KPI）</li>
+          <li>CLAUDE.md フルカスタマイズ</li>
+          <li>90日間Slack質問サポート（無制限）</li>
+          <li>3か月成果レポート（プロ仕様）</li>
+          <li>4か月目以降の運用マニュアル</li>
+        </ul>
+        <a href="#contact" class="price-cta">無料相談を予約する</a>
+      </div>
+
+      <!-- Professional -->
+      <div class="price-card">
+        <div class="price-tier">TIER 03</div>
+        <div class="price-name">プロフェッショナル</div>
+        <div class="price-amount">¥600,000<small>税込</small></div>
+        <div class="price-period">3か月＋3か月伴走・スキル15本</div>
+        <ul class="price-features">
+          <li>スタンダードのすべて</li>
+          <li>追加スキル5本（合計15本）</li>
+          <li>4-6か月目の月1ミーティング × 3回</li>
+          <li>4-6か月目のSlack質問サポート（追加90日）</li>
+          <li>"経営者AI習熟度診断"</li>
+          <li>AI顧問サービスへの移行サポート</li>
+        </ul>
+        <a href="#contact" class="price-cta">無料相談を予約する</a>
+      </div>
+    </div>
+
+    <p style="text-align: center; margin-top: 48px; font-size: 14px; color: var(--ink-soft);">
+      💳 法人カード対応・銀行振込可・領収書発行可<br>
+      📅 一括前払い割引（最大¥70,000 OFF）あり<br>
+      🔒 30日返金保証
+    </p>
+  </div>
+</section>
+
+<!-- Speaker -->
+<section class="speaker-section">
+  <div class="container">
+    <div class="section-eyebrow">講師について</div>
+    <h2 class="section-title">あなたの隣で、<span class="accent">3か月伴走する</span>講師</h2>
+    <div class="speaker-card">
+      <div class="speaker-photo">桜木<br>健二</div>
+      <div class="speaker-info">
+        <h3>桜木 健二</h3>
+        <div class="speaker-reading">さくらぎ けんじ｜AI駆動経営ラボ 主宰</div>
+        <p><strong>東京大学大学院 工学系研究科 近山・田浦研究室 卒業。</strong>日本のAI研究の先達である近山隆教授のもと、AI研究に従事。</p>
+        <p>現在はその技術的背景を活かし、経営戦略に直結する <strong>AI導入支援・コンサルティング</strong> や、経営者向けの研修に従事。プロの塾講師経験を活かした分かりやすい語り口に定評がある。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- For/NotFor -->
+<section class="fitness-section">
+  <div class="container">
+    <div class="section-eyebrow">参加対象</div>
+    <h2 class="section-title">向いている方／<span class="accent">向いていない方</span></h2>
+    <p class="section-lead">正直にお伝えします。すべての経営者にお勧めできる内容ではありません。</p>
+
+    <div class="fitness-grid">
+      <div class="fitness-card yes">
+        <h4>こんな経営者に向いています</h4>
+        <ul>
+          <li>個人事業主・1人法人で雑務に追われている</li>
+          <li>創業期スタートアップCEO（社員1〜10名）</li>
+          <li>士業・コンサル・コーチで顧客対応が膨大</li>
+          <li>中堅安定経営型で属人化を解消したい</li>
+          <li>副業・複業経営者で時間が絶対的に足りない</li>
+          <li>3か月で本気で経営を変えたい方</li>
+        </ul>
+      </div>
+      <div class="fitness-card no">
+        <h4>こうした方には合いません</h4>
+        <ul>
+          <li>すでにAIをガンガン使い込んでいる方</li>
+          <li>大企業（社員50名超）の方 → 法人パックがあります</li>
+          <li>"AIに任せれば全部解決" を期待する方</li>
+          <li>3か月のコミットメントが取れない方</li>
+          <li>セッション参加・宿題遂行ができない方</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="container-narrow">
+    <div class="section-eyebrow">よくある質問</div>
+    <h2 class="section-title">気になる点に、<span class="accent">先にお答えします</span></h2>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q1</span>3か月でどのくらいの時間が取り戻せますか？</span></button>
+        <div class="faq-a"><p>個人差はありますが、第1月で月15-25時間、3か月終了時に月60-90時間の取り戻しが標準的な成果です。これは年商1億円規模の経営者の時間単価で、月60-90万円相当の価値になります。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q2</span>ITが苦手ですが大丈夫でしょうか？</span></button>
+        <div class="faq-a"><p>受講者の7割は「Excelの関数も書いたことない」レベルの方です。プログラミング経験は一切不要。必要なのは、部下に指示を出すスキル＝経営者の本業です。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q3</span>1週間にどれくらい時間が必要ですか？</span></button>
+        <div class="faq-a"><p>週に2時間（90分セッション + 30分振り返り）です。宿題は既存業務の代替なので、追加負担にはなりません。3か月合計で約24時間のコミットメントです。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q4</span>セッションの開催時間は？</span></button>
+        <div class="faq-a"><p>平日夜・休日も対応可能です。経営者の方々のスケジュールに合わせて柔軟に設定します。録画提供もあるため、後で見返すこともできます。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q5</span>機密情報をAIに渡しても大丈夫ですか？</span></button>
+        <div class="faq-a"><p>Anthropic社（Claudeの提供元）はAPI送信データを学習に使わないことを契約で明示しています。さらに、運用上は仮名化（X-社、Y-社）の習慣を導入するため、実用上の機密漏洩リスクは極めて低くなります。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q6</span>30日返金保証の条件は？</span></button>
+        <div class="faq-a"><p>初月の3セッションを受けて、価値が見出せなかった場合は全額返金します。経営者側がセッションを2回以上無連絡欠席した場合のみ対象外となります。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q7</span>3か月後はどうなりますか？</span></button>
+        <div class="faq-a"><p>多くの方は卒業時点で "AIを自分で設計できる" 状態になっています。継続支援を希望される方には、AI顧問サービス（月¥50,000）への移行をご案内（卒業生は初月¥10,000割引）。社員展開を希望される場合は法人パックもご用意しています。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q8</span>領収書は法人名で出せますか？</span></button>
+        <div class="faq-a"><p>はい、法人名で発行可能です。法人カード対応・銀行振込・分割払いにも対応しております。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA / Contact -->
+<section class="final-cta" id="contact">
+  <div class="container-narrow">
+    <h2>3か月後、<span class="accent">どうありたいか</span>。</h2>
+    <p>
+      まずは30分の無料相談で、あなたの業務とこのプログラムが合うかを見極めましょう。<br>
+      合わないと判断したら、率直に「合わない」とお伝えします。<br><br>
+      "売り込み" にはなりません。あなたの3か月後を一緒に考える時間です。
+    </p>
+    <a href="mailto:contact@example.com?subject=AI駆動経営パッケージ無料相談&body=お名前：%0D%0A会社名：%0D%0A業種：%0D%0A業務上の悩みTOP3：%0D%0A%0D%0A無料相談希望日時（第1希望〜第3希望）：" class="cta-primary">
+      無料相談を予約する
+    </a>
+    <p style="margin-top: 32px; font-size: 14px;">
+      📧 contact@example.com｜📅 平日夜・休日対応可
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>© 2026 AI駆動経営ラボ All Rights Reserved.</div>
+      <div>
+        <a href="#">特定商取引法に基づく表記</a>
+        <a href="#">プライバシーポリシー</a>
+        <a href="#">お問い合わせ</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
