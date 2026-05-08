@@ -6,7 +6,7 @@ const pres = new pptxgen();
 
 pres.layout = 'LAYOUT_WIDE'; // 13.33 x 7.5 inches (16:9)
 pres.author = '桜木 健二';
-pres.company = 'AI Chief of Staff Lab.';
+pres.company = 'AI駆動経営ラボ';
 pres.title = '社長の30時間を、AIで取り戻す';
 
 // カラーパレット
@@ -1122,7 +1122,7 @@ s.addText('ありがとうございました', {
   x: 0.5, y: 2.7, w: 12.3, h: 1.5,
   fontSize: 72, fontFace: FONT_BOLD, bold: true, color: C.yellow, align: 'center',
 });
-s.addText('桜木 健二｜AI Chief of Staff Lab. 主宰', {
+s.addText('桜木 健二｜AI駆動経営ラボ 主宰', {
   x: 0.5, y: 5, w: 12.3, h: 0.6,
   fontSize: 24, fontFace: FONT, color: 'FFFFFF', align: 'center',
 });
