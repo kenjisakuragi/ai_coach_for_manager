@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月30時間の雑務から、AIで解放される方法｜AI駆動経営ラボ</title>
+<meta name="description" content="議事録、朝のニュース、SNS投稿。毎月30時間の "雑務" を、AIで全部消す方法を120分で実演します。プログラミング知識不要。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF7F0;
+    --bg-soft: #F2EDE0;
+    --paper: #FFFFFF;
+    --navy: #1A2B4C;
+    --navy-deep: #0F1B33;
+    --ink: #1F2937;
+    --ink-soft: #4A5563;
+    --ink-mute: #8A929A;
+    --gold: #B8915A;
+    --gold-deep: #8B6F47;
+    --gold-soft: #E8DCC4;
+    --line: #E0DAC8;
+    --green: #2E7D5B;
+    --red: #B8403F;
+    --highlight: #FFE9A8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans JP', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.95;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "palt";
+  }
+  h1, h2, h3, h4, .serif {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 900;
+    line-height: 1.5;
+    letter-spacing: 0.005em;
+  }
+  .gothic-bold {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 900;
+  }
+  a { color: inherit; text-decoration: none; }
+  img, svg { max-width: 100%; display: block; }
+
+  .container {
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .container-narrow {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ========== Header ========== */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250, 247, 240, 0.96);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 32px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .logo {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 900;
+    font-size: 18px;
+    color: var(--navy);
+    letter-spacing: 0.02em;
+  }
+  .logo .accent { color: var(--gold); }
+  .header-cta {
+    background: var(--navy);
+    color: white;
+    padding: 11px 24px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    transition: background 0.2s;
+  }
+  .header-cta:hover { background: var(--navy-deep); }
+
+  /* ========== Hero ========== */
+  .hero {
+    padding: 96px 0 120px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: 80px;
+    right: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(184, 145, 90, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    border: 1px solid var(--gold);
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gold-deep);
+    margin-bottom: 32px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 5.2vw, 60px);
+    color: var(--navy);
+    margin-bottom: 28px;
+    letter-spacing: -0.005em;
+  }
+  .hero h1 .accent {
+    color: var(--gold-deep);
+    border-bottom: 4px solid var(--gold);
+    padding-bottom: 4px;
+  }
+  .hero h1 .num {
+    font-family: 'Noto Serif JP', serif;
+    color: var(--navy);
+    font-size: 1.3em;
+    font-weight: 900;
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 660px;
+    margin-bottom: 48px;
+    line-height: 2;
+    font-weight: 500;
+  }
+  .hero-sub strong {
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  .hero-info {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    margin-bottom: 48px;
+    box-shadow: 0 8px 32px rgba(26, 43, 76, 0.06);
+  }
+  .hero-info-item {
+    padding: 24px 20px;
+    text-align: center;
+    border-right: 1px solid var(--line);
+  }
+  .hero-info-item:last-child { border-right: none; }
+  .hero-info-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .hero-info-num small { font-size: 14px; color: var(--ink-soft); margin-left: 2px; font-weight: 700; }
+  .hero-info-label {
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--navy);
+    color: white;
+    padding: 18px 44px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    transition: background 0.2s, transform 0.15s;
+    border: 2px solid var(--navy);
+    position: relative;
+  }
+  .cta-primary:hover { background: var(--navy-deep); transform: translateY(-1px); }
+  .cta-primary::after {
+    content: "→";
+    font-size: 18px;
+    transition: transform 0.2s;
+  }
+  .cta-primary:hover::after { transform: translateX(4px); }
+
+  .cta-meta {
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  /* ========== Section base ========== */
+  section { padding: 100px 0; }
+  .section-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold-deep);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-eyebrow::before { content: "— "; }
+  .section-eyebrow::after { content: " —"; }
+  .section-title {
+    font-size: clamp(28px, 3.8vw, 40px);
+    color: var(--navy);
+    margin-bottom: 24px;
+  }
+  .section-title .accent {
+    color: var(--gold-deep);
+  }
+  .section-lead {
+    font-size: 16px;
+    color: var(--ink-soft);
+    max-width: 720px;
+    margin-bottom: 56px;
+    line-height: 2;
+    font-weight: 500;
+  }
+
+  /* ========== Story ========== */
+  .story-section { background: var(--paper); }
+  .story-card {
+    border-left: 3px solid var(--gold);
+    padding: 8px 40px;
+    margin-top: 48px;
+  }
+  .scene {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .scene:last-of-type { border-bottom: none; }
+  .scene-time {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold-deep);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .scene p {
+    font-size: 16px;
+    line-height: 2;
+    color: var(--ink);
+  }
+  .scene .marker {
+    background: linear-gradient(180deg, transparent 65%, var(--highlight) 65%);
+    padding: 0 4px;
+    font-weight: 700;
+  }
+  .punch {
+    margin-top: 40px;
+    padding: 32px;
+    background: var(--bg-soft);
+    text-align: center;
+    border-top: 2px solid var(--gold);
+  }
+  .punch p {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.8;
+  }
+  .punch p .marker {
+    color: var(--gold-deep);
+    background: linear-gradient(180deg, transparent 65%, var(--highlight) 65%);
+    padding: 0 4px;
+  }
+
+  /* ========== Problem ========== */
+  .problem-section { background: var(--bg-soft); }
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .pain-card {
+    background: var(--paper);
+    padding: 32px 28px;
+    border-top: 3px solid var(--navy);
+    border-bottom: 1px solid var(--line);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .pain-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(26, 43, 76, 0.08);
+  }
+  .pain-card-no {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold-deep);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .pain-card h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: var(--navy);
+  }
+  .pain-card p {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.85;
+    margin-bottom: 16px;
+  }
+  .pain-time-bar {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--gold-deep);
+    border: 1px solid var(--gold);
+    padding: 4px 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .pain-summary {
+    margin-top: 64px;
+    padding: 56px 40px;
+    background: var(--navy);
+    color: white;
+    text-align: center;
+    position: relative;
+  }
+  .pain-summary::before, .pain-summary::after {
+    content: "";
+    position: absolute;
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    top: 50%;
+  }
+  .pain-summary::before { left: 32px; }
+  .pain-summary::after { right: 32px; }
+  .pain-summary-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(56px, 8vw, 96px);
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .pain-summary-text {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.85;
+    font-weight: 500;
+  }
+  .pain-summary-text strong { color: var(--gold); font-weight: 700; }
+
+  /* ========== Solution ========== */
+  .solution-section { background: var(--paper); }
+  .solution-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    margin: 56px 0 64px;
+    border: 1px solid var(--line);
+  }
+  .option-card {
+    background: var(--paper);
+    padding: 32px 20px;
+    text-align: center;
+    position: relative;
+  }
+  .option-card.struck {
+    background: var(--bg-soft);
+    color: var(--ink-mute);
+  }
+  .option-card.struck::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 16%; right: 16%;
+    height: 1px;
+    background: var(--red);
+    transform: rotate(-2deg);
+  }
+  .option-card.highlight {
+    background: var(--navy);
+    color: white;
+  }
+  .option-card.highlight .option-num { color: var(--gold); }
+  .option-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold-deep);
+    margin-bottom: 16px;
+    display: block;
+  }
+  .option-title {
+    font-size: 16px;
+    font-weight: 900;
+    margin-bottom: 8px;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .option-desc {
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--ink-mute);
+  }
+  .option-card.highlight .option-desc { color: rgba(255, 255, 255, 0.75); }
+
+  .solution-bridge {
+    text-align: center;
+    margin: 56px auto;
+    max-width: 720px;
+  }
+  .solution-bridge p {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.85;
+  }
+  .solution-bridge .marker {
+    background: linear-gradient(180deg, transparent 65%, var(--highlight) 65%);
+    padding: 0 4px;
+    color: var(--gold-deep);
+  }
+
+  .solution-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-top: 64px;
+  }
+  .feature-item {
+    text-align: center;
+    padding: 32px 24px;
+    border-top: 2px solid var(--gold);
+  }
+  .feature-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold-deep);
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+  }
+  .feature-item h4 {
+    font-size: 22px;
+    margin-bottom: 12px;
+    color: var(--navy);
+  }
+  .feature-item p {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.85;
+  }
+
+  /* ========== Demo ========== */
+  .demo-section { background: var(--bg-soft); }
+  .demo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-top: 56px;
+  }
+  .demo-card {
+    background: var(--paper);
+    padding: 40px;
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 16px rgba(26, 43, 76, 0.04);
+  }
+  .demo-header {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .demo-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .demo-header h3 {
+    font-size: 24px;
+    color: var(--navy);
+  }
+
+  .ba-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    align-items: stretch;
+  }
+  .ba-side {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  .ba-before {
+    background: #FAF3F1;
+    border-left: 3px solid var(--red);
+  }
+  .ba-after {
+    background: #F2F8EF;
+    border-left: 3px solid var(--green);
+  }
+  .ba-label {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .ba-before .ba-label { color: var(--red); }
+  .ba-after .ba-label { color: var(--green); }
+  .ba-time {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 900;
+    font-size: 36px;
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+  .ba-time small { font-size: 0.5em; color: var(--ink-soft); margin-left: 4px; font-weight: 700; }
+  .ba-before .ba-time { color: var(--red); }
+  .ba-after .ba-time { color: var(--green); }
+  .ba-side ul { list-style: none; padding: 0; }
+  .ba-side li {
+    font-size: 14px;
+    padding: 6px 0 6px 20px;
+    position: relative;
+    color: var(--ink);
+  }
+  .ba-before li::before {
+    content: "—";
+    position: absolute; left: 0; top: 6px;
+    color: var(--ink-mute);
+  }
+  .ba-after li::before {
+    content: "✓";
+    position: absolute; left: 0; top: 6px;
+    color: var(--green);
+    font-weight: 900;
+  }
+  .ba-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 32px;
+    font-weight: 300;
+  }
+
+  .demo-result {
+    margin-top: 24px;
+    padding: 16px 24px;
+    background: var(--bg-soft);
+    border-left: 3px solid var(--gold);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+  }
+  .demo-result-label {
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+  .demo-result strong {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    color: var(--gold-deep);
+    font-weight: 900;
+  }
+
+  .demo-explanation {
+    margin-top: 24px;
+    padding: 20px 24px;
+    border: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.95;
+  }
+  .demo-explanation .label {
+    font-weight: 700;
+    color: var(--gold-deep);
+    margin-right: 4px;
+  }
+  .demo-explanation strong { color: var(--navy); font-weight: 700; }
+
+  /* ========== Speaker ========== */
+  .speaker-section { background: var(--paper); }
+  .speaker-card {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 64px;
+    align-items: center;
+    margin-top: 48px;
+  }
+  .speaker-photo {
+    width: 220px;
+    height: 280px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--gold) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 24px;
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.3;
+    position: relative;
+  }
+  .speaker-photo::after {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+  }
+  .speaker-info h3 {
+    font-size: 32px;
+    margin-bottom: 4px;
+    color: var(--navy);
+  }
+  .speaker-reading {
+    color: var(--gold-deep);
+    font-size: 14px;
+    margin-bottom: 24px;
+    letter-spacing: 0.05em;
+  }
+  .speaker-info p {
+    color: var(--ink);
+    margin-bottom: 14px;
+    font-size: 15.5px;
+    line-height: 2;
+  }
+  .speaker-info p strong {
+    color: var(--navy);
+    font-weight: 700;
+  }
+  .speaker-quote {
+    margin-top: 24px;
+    padding: 20px 24px;
+    border-left: 3px solid var(--gold);
+    background: var(--bg-soft);
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.95;
+    font-style: italic;
+  }
+
+  /* ========== Voices ========== */
+  .voices-section { background: var(--bg-soft); }
+  .voices-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+  .voice-card {
+    background: var(--paper);
+    padding: 32px 28px;
+    border-top: 3px solid var(--gold);
+  }
+  .voice-quote {
+    font-size: 15px;
+    line-height: 1.95;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+  .voice-quote::before {
+    content: "“";
+    font-family: 'Noto Serif JP', serif;
+    font-size: 48px;
+    color: var(--gold);
+    line-height: 1;
+    margin-right: 4px;
+    vertical-align: -10px;
+  }
+  .voice-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+  .voice-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--gold) 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 13px;
+    font-family: 'Noto Serif JP', serif;
+  }
+  .voice-name { font-size: 14px; font-weight: 700; color: var(--navy); }
+  .voice-role { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+  .voices-disclaimer {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
+
+  /* ========== For/NotFor ========== */
+  .fitness-section { background: var(--paper); }
+  .fitness-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 48px;
+  }
+  .fitness-card {
+    padding: 36px 32px;
+    border-top: 2px solid var(--navy);
+  }
+  .fitness-card.no { border-top-color: var(--ink-mute); opacity: 0.85; }
+  .fitness-card h4 {
+    font-size: 20px;
+    margin-bottom: 24px;
+    color: var(--navy);
+  }
+  .fitness-card.no h4 { color: var(--ink-soft); }
+  .fitness-card ul { list-style: none; padding: 0; }
+  .fitness-card li {
+    padding: 12px 0 12px 32px;
+    position: relative;
+    font-size: 15px;
+    color: var(--ink);
+    border-bottom: 1px dashed var(--line);
+    line-height: 1.85;
+  }
+  .fitness-card li:last-child { border-bottom: none; }
+  .fitness-card.yes li::before {
+    content: "✓";
+    position: absolute; left: 0; top: 12px;
+    color: var(--green);
+    font-weight: 900;
+    font-size: 18px;
+  }
+  .fitness-card.no li::before {
+    content: "✕";
+    position: absolute; left: 0; top: 12px;
+    color: var(--ink-mute);
+    font-weight: 900;
+    font-size: 16px;
+  }
+
+  /* ========== Offer ========== */
+  .offer-section {
+    background: var(--navy);
+    color: white;
+  }
+  .offer-section .section-title { color: white; }
+  .offer-section .section-eyebrow { color: var(--gold); }
+  .offer-section .section-lead { color: rgba(255, 255, 255, 0.85); }
+  .offer-section .section-title .accent { color: var(--gold); }
+
+  .offer-card {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 56px 48px;
+    margin-top: 48px;
+    border: 1px solid var(--gold);
+    position: relative;
+  }
+  .offer-card::before {
+    content: "数量限定";
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    background: var(--gold);
+    color: var(--navy);
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+  }
+
+  .offer-card h3 {
+    font-size: 22px;
+    margin-bottom: 32px;
+    color: var(--navy);
+  }
+
+  .offer-stack { margin-bottom: 24px; }
+  .stack-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    gap: 16px;
+  }
+  .stack-item:last-child { border-bottom: none; }
+  .stack-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .stack-name .desc {
+    display: block;
+    font-size: 12.5px;
+    color: var(--ink-mute);
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .stack-price {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 700;
+    color: var(--ink-soft);
+    font-size: 14px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .stack-total {
+    margin: 24px -24px 0;
+    padding: 20px 24px;
+    background: var(--bg-soft);
+    border-left: 3px solid var(--gold);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .stack-total .label { font-size: 14px; font-weight: 700; }
+  .stack-total .value {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    text-decoration: line-through;
+  }
+
+  .offer-arrow-down {
+    text-align: center;
+    margin: 32px 0;
+    font-size: 28px;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .offer-price {
+    text-align: center;
+    margin: 0 0 32px;
+    padding: 40px 24px;
+    background: var(--navy);
+    color: white;
+  }
+  .offer-price-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .offer-price-num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(56px, 7vw, 80px);
+    font-weight: 900;
+    color: white;
+    line-height: 1;
+  }
+  .offer-price-num small {
+    font-size: 0.3em;
+    color: rgba(255, 255, 255, 0.7);
+    margin-left: 8px;
+    font-weight: 700;
+  }
+  .offer-price-meta {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 14px;
+  }
+
+  .guarantee-box {
+    padding: 24px;
+    border: 1px solid var(--green);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #F2F8EF;
+  }
+  .guarantee-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    background: var(--green);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 900;
+  }
+  .guarantee-text strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 4px;
+    color: var(--navy);
+    font-weight: 700;
+  }
+  .guarantee-text p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.8;
+  }
+
+  /* ========== Form ========== */
+  .form-section {
+    background: var(--bg-soft);
+    padding: 100px 0;
+  }
+  .signup-block {
+    background: var(--paper);
+    padding: 56px 48px;
+    text-align: center;
+    border: 1px solid var(--line);
+    max-width: 640px;
+    margin: 0 auto;
+    box-shadow: 0 8px 32px rgba(26, 43, 76, 0.06);
+  }
+  .signup-block h3 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: var(--navy);
+  }
+  .signup-block .form-lead {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 32px;
+  }
+  .signup-price-display {
+    margin: 32px 0;
+  }
+  .signup-price-display .num {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 56px;
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .signup-price-display .num small {
+    font-size: 0.4em;
+    color: var(--ink-soft);
+    margin-left: 6px;
+    font-weight: 700;
+  }
+  .signup-price-display .meta {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+  }
+  .included-box {
+    background: var(--bg-soft);
+    padding: 24px 28px;
+    margin-bottom: 32px;
+    text-align: left;
+    border-left: 3px solid var(--gold);
+  }
+  .included-box p {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: var(--navy);
+    letter-spacing: 0.05em;
+  }
+  .included-box ul {
+    list-style: none;
+    padding: 0;
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 2;
+  }
+  .included-box li::before {
+    content: "✓ ";
+    color: var(--green);
+    font-weight: 900;
+  }
+  .form-submit {
+    display: inline-block;
+    background: var(--navy);
+    color: white;
+    padding: 20px 56px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    border: 2px solid var(--navy);
+    transition: background 0.2s, transform 0.15s;
+    text-decoration: none;
+  }
+  .form-submit:hover { background: var(--navy-deep); transform: translateY(-1px); }
+  .form-note {
+    font-size: 12.5px;
+    color: var(--ink-mute);
+    margin-top: 18px;
+    line-height: 1.8;
+  }
+
+  /* ========== FAQ ========== */
+  .faq-section { background: var(--paper); }
+  .faq-list { margin-top: 48px; }
+  .faq-item {
+    border-top: 1px solid var(--line);
+    padding: 0;
+  }
+  .faq-item:last-child { border-bottom: 1px solid var(--line); }
+  .faq-q {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 24px 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: inherit;
+    color: var(--navy);
+    gap: 16px;
+  }
+  .faq-q:hover { background: var(--bg-soft); }
+  .faq-q::after {
+    content: "+";
+    font-size: 24px;
+    color: var(--gold);
+    transition: transform 0.2s;
+    font-weight: 400;
+    flex-shrink: 0;
+  }
+  .faq-item.open .faq-q::after { transform: rotate(45deg); }
+  .faq-q .faq-label {
+    font-family: 'Noto Serif JP', serif;
+    color: var(--gold-deep);
+    font-size: 13px;
+    font-weight: 700;
+    margin-right: 12px;
+    flex-shrink: 0;
+    letter-spacing: 0.1em;
+  }
+  .faq-q span { display: flex; align-items: center; flex: 1; }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    padding: 0 8px;
+    line-height: 1.95;
+  }
+  .faq-item.open .faq-a {
+    max-height: 600px;
+    padding: 4px 8px 24px;
+  }
+
+  /* ========== Final CTA ========== */
+  .final-cta {
+    background: var(--bg-soft);
+    padding: 120px 0;
+    text-align: center;
+  }
+  .final-cta h2 {
+    font-size: clamp(30px, 4.2vw, 44px);
+    color: var(--navy);
+    margin-bottom: 32px;
+  }
+  .final-cta h2 .accent {
+    color: var(--gold-deep);
+    background: linear-gradient(180deg, transparent 65%, var(--highlight) 65%);
+    padding: 0 4px;
+  }
+  .final-cta p {
+    font-size: 17px;
+    color: var(--ink-soft);
+    max-width: 640px;
+    margin: 0 auto 40px;
+    line-height: 2;
+  }
+
+  /* ========== Footer ========== */
+  footer {
+    background: var(--navy);
+    color: rgba(255, 255, 255, 0.6);
+    padding: 56px 0;
+    font-size: 13px;
+  }
+  footer .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  footer a { color: rgba(255, 255, 255, 0.6); margin-left: 24px; }
+  footer a:hover { color: var(--gold); }
+
+  /* ========== Mobile ========== */
+  @media (max-width: 768px) {
+    .hero { padding: 56px 0 80px; }
+    .hero-info { grid-template-columns: repeat(2, 1fr); }
+    .hero-info-item { border-right: none; border-bottom: 1px solid var(--line); }
+    .hero-info-item:nth-child(odd) { border-right: 1px solid var(--line); }
+    .hero-info-item:nth-last-child(-n+2) { border-bottom: none; }
+
+    .pain-grid { grid-template-columns: 1fr; }
+    .solution-options { grid-template-columns: repeat(2, 1fr); }
+    .solution-features { grid-template-columns: 1fr; }
+    .voices-list { grid-template-columns: 1fr; }
+    .fitness-grid { grid-template-columns: 1fr; }
+    .ba-grid { grid-template-columns: 1fr; }
+    .ba-arrow { transform: rotate(90deg); padding: 8px; font-size: 28px; }
+
+    .speaker-card { grid-template-columns: 1fr; gap: 32px; text-align: center; }
+    .speaker-photo { margin: 0 auto; width: 180px; height: 240px; }
+
+    .offer-card { padding: 40px 28px; }
+    .signup-block { padding: 40px 28px; }
+    .story-card { padding: 8px 24px; }
+
+    section { padding: 64px 0; }
+    .header-cta { padding: 8px 16px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== Header ========== -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">AI駆動経営<span class="accent">ラボ</span></a>
+    <a href="https://buy.stripe.com/5kQ8wQ0Do7Pn9A11tH7IY00" target="_blank" rel="noopener" class="header-cta">参加する</a>
+  </div>
+</header>
+
+<!-- ========== Hero ========== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-tag">経営者・意思決定層 限定</div>
+
+    <h1>
+      月<span class="num">30</span>時間の<span class="accent">雑務</span>から、<br>
+      解放される方法。
+    </h1>
+
+    <p class="hero-sub">
+      議事録づくり、朝のニュース、SNS投稿——。<br>
+      経営者から月30時間を奪う <strong>"雑務"</strong> を、AIで全部消す方法を120分で実演します。<br>
+      <strong>プログラミング知識は不要</strong>。必要なのは、部下に指示を出すスキルだけです。
+    </p>
+
+    <div class="hero-info">
+      <div class="hero-info-item">
+        <div class="hero-info-num">120<small>分</small></div>
+        <div class="hero-info-label">LIVE+Q&A</div>
+      </div>
+      <div class="hero-info-item">
+        <div class="hero-info-num">3<small>本</small></div>
+        <div class="hero-info-label">実演デモ</div>
+      </div>
+      <div class="hero-info-item">
+        <div class="hero-info-num">¥30,000</div>
+        <div class="hero-info-label">税込・限定価格</div>
+      </div>
+      <div class="hero-info-item">
+        <div class="hero-info-num">30<small>名</small></div>
+        <div class="hero-info-label">先着定員</div>
+      </div>
+    </div>
+
+    <a href="https://buy.stripe.com/5kQ8wQ0Do7Pn9A11tH7IY00" target="_blank" rel="noopener" class="cta-primary">
+      ¥30,000 で参加を申し込む
+    </a>
+    <p class="cta-meta">申込後すぐにZoomリンクが届きます／開催3日前まで全額返金可</p>
+  </div>
+</section>
+
+<!-- ========== Story ========== -->
+<section class="story-section">
+  <div class="container-narrow">
+    <div class="section-eyebrow">こんな1日、覚えがありませんか</div>
+    <h2 class="section-title">経営者の<span class="accent">月曜日</span></h2>
+
+    <div class="story-card">
+      <div class="scene">
+        <div class="scene-time">7:30 AM</div>
+        <p>スマホでニュースを開く。メールを確認する。SlackやLINEの未読を流し読みする——気づけば、<span class="marker">15分が消えている</span>。「今日、何を決めるんだっけ」を思い出すのに、また5分。</p>
+      </div>
+
+      <div class="scene">
+        <div class="scene-time">9:00 AM</div>
+        <p>役員会、1時間。議論のあと「議事録、まとめておきます」と告げて自席に戻る。録画を見直して書き起こすのに30分。<span class="marker">気が重い</span>。</p>
+      </div>
+
+      <div class="scene">
+        <div class="scene-time">2:00 PM</div>
+        <p>取引先から問い合わせ。「あれ、3か月前にこの件、何を話したっけ」。古いメールを検索すること10分。</p>
+      </div>
+
+      <div class="scene">
+        <div class="scene-time">10:00 PM</div>
+        <p>ようやく一段落。「Podcastを記事化しなくては」——でも2〜3時間かかると思って、また後回し。気づけば<span class="marker">2か月、何も発信していない</span>。</p>
+      </div>
+
+      <div class="punch">
+        <p>これらは全て、本当は<br><span class="marker">「自分でなくてもいい仕事」</span>。<br>足し算すると、月30時間。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Problem ========== -->
+<section class="problem-section">
+  <div class="container">
+    <div class="section-eyebrow">問題の正体</div>
+    <h2 class="section-title">経営者の時間を奪う、<span class="accent">4つの雑務</span></h2>
+    <p class="section-lead">
+      ひとつひとつは10〜30分の小さな仕事。<br>
+      しかし積み上がると、月30時間。<br>
+      これが、経営者を疲弊させる "雑務" の正体です。
+    </p>
+
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-card-no">PAIN 01</div>
+        <h3>議事録づくり</h3>
+        <p>役員会のあと「まとめておきます」と言って自席へ。録画はあるけれど、見直して書き起こすのに30分以上。気が重い業務の代表格。</p>
+        <span class="pain-time-bar">月10時間</span>
+      </div>
+
+      <div class="pain-card">
+        <div class="pain-card-no">PAIN 02</div>
+        <h3>朝のニュースチェック</h3>
+        <p>ニュース、Slack、メールを開くだけで15分。「今日何を決めるんだっけ」を思い出すのに、また5分。判断モードに入るための起動コスト。</p>
+        <span class="pain-time-bar">月7.5時間</span>
+      </div>
+
+      <div class="pain-card">
+        <div class="pain-card-no">PAIN 03</div>
+        <h3>"あれ、何だっけ" の検索</h3>
+        <p>「あの担当、誰だっけ」「3か月前に何を約束したっけ」。過去メールを掘り返す時間。漏れたら信用問題に。</p>
+        <span class="pain-time-bar">月5〜8時間</span>
+      </div>
+
+      <div class="pain-card">
+        <div class="pain-card-no">PAIN 04</div>
+        <h3>SNS・発信の停滞</h3>
+        <p>動画やPodcastは録っている。けれど記事化に2〜3時間かかると思うと後回し。気づけば2か月、発信ゼロ。</p>
+        <span class="pain-time-bar">機会損失</span>
+      </div>
+    </div>
+
+    <div class="pain-summary">
+      <div class="pain-summary-num">月30時間</div>
+      <div class="pain-summary-text">
+        雑務に奪われている時間です。<br>
+        年間にすると、<strong>営業日2か月分</strong>。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Solution ========== -->
+<section class="solution-section">
+  <div class="container">
+    <div class="section-eyebrow">解決策</div>
+    <h2 class="section-title">これまで、解決策は<span class="accent">3つ</span>しかなかった</h2>
+    <p class="section-lead">
+      しかし今、現実的な4つ目の選択肢があります。<br>
+      それが、AIを経営者専属の右腕として育てる方法です。
+    </p>
+
+    <div class="solution-options">
+      <div class="option-card struck">
+        <div class="option-num">01</div>
+        <div class="option-title">秘書を採用</div>
+        <div class="option-desc">月30〜50万円<br>教育・退職リスク</div>
+      </div>
+      <div class="option-card struck">
+        <div class="option-num">02</div>
+        <div class="option-title">業務をやめる</div>
+        <div class="option-desc">実際にはやめられない</div>
+      </div>
+      <div class="option-card struck">
+        <div class="option-num">03</div>
+        <div class="option-title">早起きで頑張る</div>
+        <div class="option-desc">持続不可能</div>
+      </div>
+      <div class="option-card highlight">
+        <div class="option-num">04</div>
+        <div class="option-title">AIに任せる</div>
+        <div class="option-desc">給与ゼロ<br>24時間稼働</div>
+      </div>
+    </div>
+
+    <div class="solution-bridge">
+      <p>「AIを、<span class="marker">経営者専属の右腕として育てる</span>」<br>これが、4つ目の選択肢です。</p>
+    </div>
+
+    <div class="solution-features">
+      <div class="feature-item">
+        <div class="feature-num">FEATURE 01</div>
+        <h4>覚え続ける</h4>
+        <p>会社情報・性格・好みを一度設定すれば、毎回伝える必要がありません。あなた専属に "育てられる" のが特徴です。</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-num">FEATURE 02</div>
+        <h4>業務とつながる</h4>
+        <p>メール・カレンダー・社内資料と連携できます。"画面の中だけ" で完結しない、本物の実務に効きます。</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-num">FEATURE 03</div>
+        <h4>得意技を持たせる</h4>
+        <p>繰り返す業務は "型" として登録できます。1度作れば、毎回同じ品質で実行されます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Demo ========== -->
+<section class="demo-section">
+  <div class="container">
+    <div class="section-eyebrow">120分で見せること</div>
+    <h2 class="section-title">あなたの業務が、<span class="accent">こう変わります</span></h2>
+    <p class="section-lead">
+      抽象論はありません。実際の業務素材を使い、目の前で動かしてお見せします。<br>
+      チャットで「うちはこう変えたい」と書いていただければ、その場でカスタマイズします。
+    </p>
+
+    <div class="demo-list">
+      <div class="demo-card">
+        <div class="demo-header">
+          <div class="demo-num">01</div>
+          <h3>議事録要約：30分の作業を90秒に</h3>
+        </div>
+
+        <div class="ba-grid">
+          <div class="ba-side ba-before">
+            <span class="ba-label">これまで</span>
+            <div class="ba-time">30分<small>／回</small></div>
+            <ul>
+              <li>録画を見直して文字起こしを読む</li>
+              <li>決定事項を箇条書きにする</li>
+              <li>誰が何をするかを整理する</li>
+              <li>関係者にメールで送付する</li>
+            </ul>
+          </div>
+          <div class="ba-arrow">→</div>
+          <div class="ba-side ba-after">
+            <span class="ba-label">これから</span>
+            <div class="ba-time">90秒<small>／回</small></div>
+            <ul>
+              <li>録画ファイルを渡すだけ</li>
+              <li>決定事項3点が自動で抽出</li>
+              <li>担当・期限つきの宿題リスト</li>
+              <li>"あなたが次に判断すべきこと" まで自動で</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="demo-result">
+          <span class="demo-result-label">削減できる時間</span>
+          <strong>月10時間 → ほぼゼロ</strong>
+        </div>
+
+        <div class="demo-explanation">
+          <span class="label">POINT</span>
+          "あなたが次に判断すべきこと" は、AIに「私は経営者なので必ず私の判断ポイントを抽出して」と設定してあるから出てきます。これは <strong>あなただけのために動くAI</strong> です。
+        </div>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-header">
+          <div class="demo-num">02</div>
+          <h3>朝のブリーフィング：15分のチェックを1分に</h3>
+        </div>
+
+        <div class="ba-grid">
+          <div class="ba-side ba-before">
+            <span class="ba-label">これまで</span>
+            <div class="ba-time">15-20分<small>／日</small></div>
+            <ul>
+              <li>ニュースアプリを開く</li>
+              <li>Slackの未読を流し読む</li>
+              <li>業界メディアを巡回する</li>
+              <li>頭が散らかったまま朝MTGへ</li>
+            </ul>
+          </div>
+          <div class="ba-arrow">→</div>
+          <div class="ba-side ba-after">
+            <span class="ba-label">これから</span>
+            <div class="ba-time">1分<small>／日</small></div>
+            <ul>
+              <li>3行で今朝のサマリ</li>
+              <li>競合の動きと自社への影響</li>
+              <li>今日の判断に効く1件</li>
+              <li>判断モードで朝MTGへ</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="demo-result">
+          <span class="demo-result-label">削減できる時間</span>
+          <strong>月7.5時間 → ほぼゼロ</strong>
+        </div>
+
+        <div class="demo-explanation">
+          <span class="label">POINT</span>
+          AIはあなたの会社・事業を理解しているため、単なる "ニュース要約" ではなく <strong>"経営者目線の影響分析"</strong> までを行います。毎朝の "脳の起動" が、判断に直結する形に変わります。
+        </div>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-header">
+          <div class="demo-num">03</div>
+          <h3>コンテンツ展開：2.5時間の作業を5分に</h3>
+        </div>
+
+        <div class="ba-grid">
+          <div class="ba-side ba-before">
+            <span class="ba-label">これまで</span>
+            <div class="ba-time">2-3時間<small>／本</small></div>
+            <ul>
+              <li>文字起こしを読み返す</li>
+              <li>note記事に書き直す</li>
+              <li>X投稿用に短く整える</li>
+              <li>気力切れて結局やめる</li>
+            </ul>
+          </div>
+          <div class="ba-arrow">→</div>
+          <div class="ba-side ba-after">
+            <span class="ba-label">これから</span>
+            <div class="ba-time">5分<small>／本</small></div>
+            <ul>
+              <li>note記事（章立てつき）</li>
+              <li>X投稿スレッド</li>
+              <li>LinkedIn投稿</li>
+              <li>社内Slack共有用サマリ</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="demo-result">
+          <span class="demo-result-label">削減できる時間</span>
+          <strong>2.5時間 → 5分</strong>
+        </div>
+
+        <div class="demo-explanation">
+          <span class="label">POINT</span>
+          あなたの過去の投稿を参照させているため、出力される文章は <strong>"あなたが書いたかのようなトーン"</strong> に揃います。発信が止まらない経営者になれます。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Speaker ========== -->
+<section class="speaker-section">
+  <div class="container">
+    <div class="section-eyebrow">講師について</div>
+    <h2 class="section-title">あなたの隣で、<span class="accent">一緒に手を動かす</span>講師</h2>
+
+    <div class="speaker-card">
+      <div class="speaker-photo">桜木<br>健二</div>
+      <div class="speaker-info">
+        <h3>桜木 健二</h3>
+        <div class="speaker-reading">さくらぎ けんじ｜AI駆動経営ラボ 主宰</div>
+        <p><strong>東京大学大学院 工学系研究科 近山・田浦研究室 卒業。</strong>日本のAI研究の先達である近山隆教授のもと、AI研究に従事。</p>
+        <p>現在はその技術的背景を活かし、経営戦略に直結する <strong>AI導入支援・コンサルティング</strong> や、法人・経営者向けの研修に従事。プロの塾講師経験を活かした分かりやすい語り口に定評がある。</p>
+        <div class="speaker-quote">
+          「難しいことをやさしく、やさしいことをふかく」——ITが苦手な経営者にも腑に落ちる伝え方を心がけています。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Voices ========== -->
+<section class="voices-section">
+  <div class="container">
+    <div class="section-eyebrow">参加者の声</div>
+    <h2 class="section-title">経営者からの<span class="accent">フィードバック</span></h2>
+
+    <div class="voices-list">
+      <div class="voice-card">
+        <p class="voice-quote">ChatGPTを2年使ってきて、なぜ続かなかったかが120分で腑に落ちました。"覚え続ける" という発想が、これほど経営者の業務に効くとは。</p>
+        <div class="voice-author">
+          <div class="voice-avatar">AM</div>
+          <div>
+            <div class="voice-name">A.M さん</div>
+            <div class="voice-role">SaaS企業 CEO</div>
+          </div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <p class="voice-quote">秘書を雇うか悩んでいたタイミングで参加しました。デモを見た瞬間に "もう雇わなくていい" と決断できました。</p>
+        <div class="voice-author">
+          <div class="voice-avatar">KS</div>
+          <div>
+            <div class="voice-name">K.S さん</div>
+            <div class="voice-role">税理士事務所 代表</div>
+          </div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <p class="voice-quote">"自分にもできる" と思える瞬間が3回ありました。技術論ではなく、経営者の業務として説明してくれる構成が秀逸でした。</p>
+        <div class="voice-author">
+          <div class="voice-avatar">TN</div>
+          <div>
+            <div class="voice-name">T.N さん</div>
+            <div class="voice-role">製造業 取締役</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="voices-disclaimer">※ 初期参加者からのコメントです。許諾範囲で表記しています。</p>
+  </div>
+</section>
+
+<!-- ========== For/NotFor ========== -->
+<section class="fitness-section">
+  <div class="container">
+    <div class="section-eyebrow">参加対象</div>
+    <h2 class="section-title">向いている方／<span class="accent">向いていない方</span></h2>
+    <p class="section-lead">
+      正直にお伝えします。すべての方にお勧めできる内容ではありません。
+    </p>
+
+    <div class="fitness-grid">
+      <div class="fitness-card yes">
+        <h4>こんな経営者に向いています</h4>
+        <ul>
+          <li>AIに興味があるが、何から始めればいいか分からない方</li>
+          <li>ChatGPTは試したが、続かなかった方</li>
+          <li>「プログラミングは無理」と諦めていた方</li>
+          <li>秘書を雇うほどではないが、雑務に追われている経営者</li>
+          <li>判断に専念できる時間を、本気で取り戻したい方</li>
+        </ul>
+      </div>
+      <div class="fitness-card no">
+        <h4>こうした方には合いません</h4>
+        <ul>
+          <li>すでにAIをガンガン使い込んでいる方</li>
+          <li>プログラミングの技術論を聞きたい方</li>
+          <li>"AIの未来予測" を聞きたい方</li>
+          <li>質問せず、一方的に情報だけ欲しい方</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Offer ========== -->
+<section class="offer-section">
+  <div class="container">
+    <div class="section-eyebrow">参加費とサービス内容</div>
+    <h2 class="section-title">月30時間と、<span class="accent">¥30,000</span> を交換します</h2>
+    <p class="section-lead">
+      投資効果は明白です。年商1億円規模の経営者の方の時間単価で、月30時間は約45万円相当。<br>
+      実質 <strong style="color: var(--gold);">15倍のレバレッジ</strong> がかかる120分です。
+    </p>
+
+    <div class="offer-card">
+      <h3>120分に含まれるもの</h3>
+
+      <div class="offer-stack">
+        <div class="stack-item">
+          <div>
+            <div class="stack-name">
+              ライブ実演デモ × 3本
+              <span class="desc">議事録／朝のブリーフ／コンテンツ展開</span>
+            </div>
+          </div>
+          <div class="stack-price">通常 ¥60,000</div>
+        </div>
+        <div class="stack-item">
+          <div>
+            <div class="stack-name">
+              あなたの業務への直接Q&A
+              <span class="desc">チャット・音声どちらでも</span>
+            </div>
+          </div>
+          <div class="stack-price">通常 ¥30,000</div>
+        </div>
+        <div class="stack-item">
+          <div>
+            <div class="stack-name">
+              録画 1か月限定アクセス
+              <span class="desc">後日復習・社内共有可</span>
+            </div>
+          </div>
+          <div class="stack-price">通常 ¥10,000</div>
+        </div>
+        <div class="stack-item">
+          <div>
+            <div class="stack-name">
+              無料個別診断（15分）の優先枠
+              <span class="desc">参加者のみ予約可・希望者限定</span>
+            </div>
+          </div>
+          <div class="stack-price">通常 ¥30,000</div>
+        </div>
+      </div>
+
+      <div class="stack-total">
+        <span class="label">通常価格 合計</span>
+        <span class="value">¥130,000</span>
+      </div>
+
+      <div class="offer-arrow-down">▼</div>
+
+      <div class="offer-price">
+        <div class="offer-price-label">先着30名様限定価格</div>
+        <div class="offer-price-num">¥30,000<small>税込</small></div>
+        <div class="offer-price-meta">3回目以降は ¥40,000 に値上げ予定</div>
+      </div>
+
+      <div class="guarantee-box">
+        <div class="guarantee-icon">✓</div>
+        <div class="guarantee-text">
+          <strong>3日前まで全額返金保証</strong>
+          <p>「想像していた内容と違った」場合、開催3日前までであれば全額返金いたします。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Form / Signup ========== -->
+<section class="form-section" id="signup">
+  <div class="container">
+    <div class="signup-block">
+      <h3>お申し込み</h3>
+      <p class="form-lead">クリック後、Stripeの決済画面に進みます（1分で完了）</p>
+
+      <div class="signup-price-display">
+        <div class="num">¥30,000<small>税込</small></div>
+        <div class="meta">先着30名様限定価格</div>
+      </div>
+
+      <div class="included-box">
+        <p>含まれるもの</p>
+        <ul>
+          <li>120分のライブ実演（Zoom）</li>
+          <li>あなたの業務への直接Q&A</li>
+          <li>録画 1か月限定アクセス</li>
+          <li>無料個別診断（15分）の優先枠</li>
+        </ul>
+      </div>
+
+      <a href="https://buy.stripe.com/5kQ8wQ0Do7Pn9A11tH7IY00" target="_blank" rel="noopener" class="form-submit">
+        ¥30,000 で参加を申し込む  →
+      </a>
+      <p class="form-note">
+        クレジットカード決済（Stripe）／領収書自動発行<br>
+        開催3日前まで全額返金可
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FAQ ========== -->
+<section class="faq-section">
+  <div class="container-narrow">
+    <div class="section-eyebrow">よくある質問</div>
+    <h2 class="section-title">気になる点に、<span class="accent">先にお答えします</span></h2>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q1</span>ITが苦手な経営者でも、本当に大丈夫ですか？</span></button>
+        <div class="faq-a"><p>はい、まったく問題ありません。受講者の7割は「Excelの関数も書いたことがない」レベルの方です。プログラミング経験は一切不要。必要なのは、部下に指示を出すスキル＝経営者の本業です。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q2</span>ChatGPTを使っていますが、何が違うのですか？</span></button>
+        <div class="faq-a"><p>ChatGPTは "1回ごとの会話" の道具、Claude Codeは "あなたの会社・性格・好みを覚え続ける" 道具です。月30時間の差はそこから生まれます。当日のデモで具体的にお見せします。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q3</span>当日参加できなかった場合、録画は見られますか？</span></button>
+        <div class="faq-a"><p>はい。参加申込者には開催後24時間以内に録画リンクをお送りします。1か月間視聴可能です。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q4</span>参加後に追加の有料サービスのセールスはありますか？</span></button>
+        <div class="faq-a"><p>当日120分のうち、最後の20分でAI顧問サービスのご紹介をします。それ以外の100分は完全に実演とQ&A。希望されない方は最後の20分を聞かずに退出していただいて構いません。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q5</span>機密情報をAIに渡しても大丈夫ですか？</span></button>
+        <div class="faq-a"><p>Anthropic社（Claudeの提供元）はAPI送信データを学習に使わないことを契約で明示しています。運用上の注意点も当日お話しします。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q6</span>領収書は発行できますか？</span></button>
+        <div class="faq-a"><p>はい、Stripeから自動発行されます。法人名での発行も可能です。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span><span class="faq-label">Q7</span>返金できますか？</span></button>
+        <div class="faq-a"><p>開催3日前までのキャンセルは全額返金。それ以降は録画提供での対応となります。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Final CTA ========== -->
+<section class="final-cta">
+  <div class="container-narrow">
+    <h2>月30時間、<span class="accent">解放されますか？</span></h2>
+    <p>
+      このページを閉じれば、明日からの仕事は何も変わりません。<br>
+      来月も、議事録に30分。朝のニュースに15分。<br><br>
+      120分で景色を変えるかどうかは、あなたの選択です。
+    </p>
+    <a href="https://buy.stripe.com/5kQ8wQ0Do7Pn9A11tH7IY00" target="_blank" rel="noopener" class="cta-primary">
+      ¥30,000 で参加を申し込む
+    </a>
+  </div>
+</section>
+
+<!-- ========== Footer ========== -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>© 2026 AI駆動経営ラボ All Rights Reserved.</div>
+      <div>
+        <a href="#">特定商取引法に基づく表記</a>
+        <a href="#">プライバシーポリシー</a>
+        <a href="#">お問い合わせ</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

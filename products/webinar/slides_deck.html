@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社長の30時間を、AIで取り戻す｜Claude Code活用ライブ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Maru+Gothic:wght@500;700;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFF9EE;
+    --bg-warm: #FFE9B8;
+    --paper: #FFFFFF;
+    --ink: #2A2419;
+    --ink-soft: #4D5862;
+    --ink-mute: #8A929A;
+    --orange: #FF8C42;
+    --orange-deep: #E5701F;
+    --yellow: #FFD84D;
+    --yellow-soft: #FFF1A8;
+    --green: #5CB85C;
+    --green-deep: #3E9A3E;
+    --red: #E55A4B;
+    --red-soft: #FBE5E1;
+    --line: #EAE0C7;
+    --highlight: #FFE585;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--ink);
+    font-family: 'Noto Sans JP', system-ui, sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "palt";
+  }
+
+  /* スライドコンテナ */
+  .deck {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+  }
+
+  .slide {
+    display: none;
+    width: 100%;
+    max-width: 1280px;
+    height: 100%;
+    max-height: 720px;
+    aspect-ratio: 16 / 9;
+    background: var(--bg);
+    color: var(--ink);
+    padding: 60px 80px;
+    border-radius: 12px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide.active {
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* タイポグラフィ */
+  h1, h2, h3, h4, .title {
+    font-family: 'Zen Maru Gothic', 'Noto Sans JP', sans-serif;
+    font-weight: 900;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  h1 { font-size: 64px; }
+  h2 { font-size: 52px; color: var(--orange-deep); }
+  h3 { font-size: 36px; }
+  h4 { font-size: 28px; }
+  p { font-size: 24px; line-height: 1.85; font-weight: 500; }
+  li { font-size: 22px; line-height: 1.85; font-weight: 500; margin: 8px 0; }
+
+  .marker {
+    background: linear-gradient(180deg, transparent 60%, var(--highlight) 60%);
+    padding: 0 6px;
+    font-weight: 900;
+  }
+  .marker-orange {
+    background: linear-gradient(180deg, transparent 60%, #FFD0A8 60%);
+    padding: 0 6px;
+    font-weight: 900;
+  }
+
+  .caveat {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+  }
+
+  /* スライド共通要素 */
+  .slide-tag {
+    position: absolute;
+    top: 32px;
+    left: 80px;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    color: var(--orange);
+    text-transform: uppercase;
+  }
+
+  .slide-num {
+    position: absolute;
+    top: 32px;
+    right: 80px;
+    font-family: 'Caveat', cursive;
+    font-size: 24px;
+    color: var(--ink-mute);
+    font-weight: 700;
+  }
+
+  /* セクション区切りスライド */
+  .slide.section-divider {
+    background: var(--ink);
+    color: white;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .slide.section-divider .slide-tag { color: var(--yellow); }
+  .slide.section-divider h2 { color: var(--yellow); font-size: 100px; }
+  .slide.section-divider .lead { color: rgba(255,255,255,0.85); font-size: 28px; margin-top: 24px; }
+
+  /* カバースライド */
+  .slide.cover {
+    background: linear-gradient(135deg, var(--bg-warm) 0%, var(--bg) 100%);
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+  }
+  .slide.cover h1 {
+    font-size: 80px;
+    margin-bottom: 24px;
+  }
+  .slide.cover h1 .accent {
+    color: var(--orange-deep);
+    background: linear-gradient(180deg, transparent 60%, var(--highlight) 60%);
+    padding: 0 12px;
+  }
+  .slide.cover .subtitle {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    margin-bottom: 56px;
+  }
+  .slide.cover .speaker {
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    border-radius: 100px;
+    padding: 16px 36px;
+    font-size: 22px;
+    font-weight: 700;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  /* 大きな数字スライド */
+  .slide.big-number {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .slide.big-number .pre-text {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+  }
+  .slide.big-number .number {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-weight: 900;
+    color: var(--orange-deep);
+    font-size: 280px;
+    line-height: 1;
+    margin: 0 0 24px;
+    text-shadow: 8px 8px 0 var(--yellow);
+  }
+  .slide.big-number .post-text {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .slide.big-number .post-text strong {
+    color: var(--orange-deep);
+    font-size: 1.15em;
+  }
+
+  /* 質問スライド */
+  .slide.question {
+    background: var(--bg-warm);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .slide.question .question-mark {
+    font-family: 'Caveat', cursive;
+    font-size: 220px;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .slide.question h2 {
+    font-size: 56px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  /* 比較スライド（Before/After） */
+  .ba-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    align-items: stretch;
+    flex: 1;
+    margin-top: 32px;
+  }
+  .ba-side {
+    padding: 32px;
+    border-radius: 16px;
+    border: 3px solid var(--ink);
+    display: flex;
+    flex-direction: column;
+  }
+  .ba-before { background: var(--red-soft); }
+  .ba-after { background: #E5F4DC; }
+  .ba-label {
+    font-size: 14px;
+    font-weight: 900;
+    margin-bottom: 12px;
+    padding: 4px 14px;
+    border-radius: 100px;
+    border: 2px solid var(--ink);
+    align-self: flex-start;
+  }
+  .ba-before .ba-label { background: var(--red); color: white; }
+  .ba-after .ba-label { background: var(--green); color: white; }
+  .ba-time {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-weight: 900;
+    font-size: 56px;
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+  .ba-time small { font-size: 0.45em; color: var(--ink-soft); }
+  .ba-before .ba-time { color: var(--red); }
+  .ba-after .ba-time { color: var(--green-deep); }
+  .ba-side ul { list-style: none; padding: 0; }
+  .ba-side li {
+    font-size: 18px;
+    padding: 6px 0 6px 28px;
+    position: relative;
+  }
+  .ba-before li::before {
+    content: "😩"; position: absolute; left: 0; top: 4px; font-size: 18px;
+  }
+  .ba-after li::before {
+    content: "✨"; position: absolute; left: 0; top: 4px; font-size: 18px;
+  }
+  .ba-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--orange);
+    font-size: 80px;
+    font-weight: 900;
+  }
+
+  /* 通常コンテンツスライド */
+  .slide.content {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 100px;
+  }
+  .slide.content h2 {
+    margin-bottom: 16px;
+  }
+  .slide.content .lead {
+    font-size: 22px;
+    color: var(--ink-soft);
+    margin-bottom: 32px;
+    font-weight: 500;
+  }
+
+  /* 4カラム比較（オプション） */
+  .four-cols {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    flex: 1;
+  }
+  .col-card {
+    background: var(--paper);
+    padding: 24px 20px;
+    border-radius: 16px;
+    text-align: center;
+    border: 3px solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .col-card.struck::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 8%; right: 8%;
+    height: 3px;
+    background: var(--red);
+    transform: rotate(-3deg);
+  }
+  .col-card.struck { opacity: 0.5; position: relative; }
+  .col-card.highlight {
+    background: var(--orange);
+    color: white;
+    transform: scale(1.06);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .col-card .emoji { font-size: 48px; margin-bottom: 12px; line-height: 1; }
+  .col-card .col-title { font-weight: 900; margin-bottom: 8px; font-size: 20px; font-family: 'Zen Maru Gothic'; }
+  .col-card .col-desc { font-size: 14px; color: var(--ink-mute); }
+  .col-card.highlight .col-desc { color: rgba(255,255,255,0.9); }
+
+  /* 3カラム機能 */
+  .three-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    flex: 1;
+    align-items: center;
+  }
+  .feature-card {
+    background: var(--bg-warm);
+    padding: 32px 24px;
+    border-radius: 20px;
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    text-align: center;
+  }
+  .feature-card .emoji {
+    font-size: 64px; margin-bottom: 16px; line-height: 1;
+  }
+  .feature-card h3 { font-size: 24px; margin-bottom: 12px; color: var(--orange-deep); }
+  .feature-card p { font-size: 16px; line-height: 1.85; color: var(--ink-soft); }
+
+  /* 痛みカード4枚 */
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    flex: 1;
+  }
+  .pain-card {
+    background: var(--paper);
+    padding: 24px;
+    border-radius: 16px;
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  .pain-card .emoji {
+    font-size: 56px; line-height: 1; flex-shrink: 0;
+  }
+  .pain-card h4 { font-size: 22px; margin-bottom: 6px; }
+  .pain-card .time-badge {
+    display: inline-block;
+    background: var(--ink); color: var(--yellow);
+    padding: 4px 14px; border-radius: 100px;
+    font-size: 14px; font-weight: 900;
+    margin-top: 6px;
+  }
+
+  /* チャット呼びかけ */
+  .slide.chat-prompt {
+    background: var(--orange);
+    color: white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .slide.chat-prompt .icon { font-size: 120px; line-height: 1; margin-bottom: 24px; }
+  .slide.chat-prompt h2 {
+    color: white; font-size: 60px; margin-bottom: 24px;
+  }
+  .slide.chat-prompt p {
+    font-size: 28px; color: rgba(255,255,255,0.95);
+  }
+
+  /* 価格スライド */
+  .slide.pricing {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .price-amount {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 200px;
+    font-weight: 900;
+    color: var(--ink);
+    line-height: 1;
+    margin: 24px 0;
+  }
+  .price-amount small { font-size: 0.3em; color: var(--ink-soft); margin-left: 8px; }
+  .price-comparison {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 24px;
+  }
+  .price-comp-item {
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    padding: 16px 24px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .price-comp-item.highlight { background: var(--yellow); }
+  .price-comp-item .label { font-size: 14px; color: var(--ink-mute); margin-bottom: 4px; }
+  .price-comp-item .value { font-size: 22px; font-weight: 900; }
+
+  /* オファーカード */
+  .offer-card {
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 8px 8px 0 var(--orange-deep);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* テーブル */
+  table {
+    width: 100%;
+    font-size: 18px;
+    border-collapse: collapse;
+    margin-top: 16px;
+  }
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 2px dashed var(--line);
+  }
+  th {
+    background: var(--bg-warm);
+    font-weight: 900;
+    color: var(--ink);
+  }
+  tbody tr:hover { background: rgba(255,232,133,0.3); }
+
+  /* 引用 */
+  blockquote {
+    border-left: 6px solid var(--orange);
+    padding: 16px 24px;
+    background: var(--bg-warm);
+    border-radius: 0 12px 12px 0;
+    font-size: 22px;
+    margin: 16px 0;
+    font-weight: 700;
+  }
+
+  /* リスト・3つの約束 */
+  .promise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex: 1;
+    justify-content: center;
+  }
+  .promise-item {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: var(--paper);
+    padding: 28px 32px;
+    border-radius: 16px;
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .promise-num {
+    background: var(--orange);
+    color: white;
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Zen Maru Gothic';
+    font-size: 32px; font-weight: 900;
+    flex-shrink: 0;
+    border: 3px solid var(--ink);
+  }
+  .promise-text { flex: 1; }
+  .promise-text h4 { font-size: 26px; margin-bottom: 6px; }
+  .promise-text p { font-size: 18px; color: var(--ink-soft); }
+
+  /* CTA / クロージング */
+  .slide.cta {
+    background: linear-gradient(135deg, var(--orange) 0%, var(--orange-deep) 100%);
+    color: white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .slide.cta h2 {
+    color: white; font-size: 64px; margin-bottom: 32px;
+  }
+  .slide.cta p { color: rgba(255,255,255,0.95); font-size: 26px; }
+  .slide.cta .cta-box {
+    background: white;
+    color: var(--ink);
+    padding: 24px 48px;
+    border-radius: 100px;
+    margin-top: 32px;
+    font-size: 28px;
+    font-weight: 900;
+    border: 3px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  /* ナビゲーション */
+  .nav-bar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    background: rgba(255,255,255,0.95);
+    padding: 12px 20px;
+    border-radius: 100px;
+    align-items: center;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    z-index: 100;
+  }
+  .nav-btn {
+    background: var(--ink);
+    color: white;
+    border: none;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+  .nav-btn:hover { opacity: 0.8; }
+  .nav-counter {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* スピーカーノート */
+  .speaker-note {
+    position: absolute;
+    bottom: 16px;
+    left: 80px;
+    right: 80px;
+    font-size: 11px;
+    color: var(--ink-mute);
+    font-style: italic;
+    border-top: 1px dashed var(--line);
+    padding-top: 8px;
+    display: none; /* デフォルト非表示。Sキーで切替 */
+  }
+  body.show-notes .speaker-note { display: block; }
+
+  /* 印刷用 */
+  @media print {
+    html, body { overflow: visible; height: auto; background: white; }
+    .deck { display: block; height: auto; }
+    .slide {
+      display: flex !important;
+      flex-direction: column;
+      page-break-after: always;
+      box-shadow: none;
+      width: 100%;
+      max-width: none;
+      height: 100vh;
+      margin: 0;
+      border-radius: 0;
+    }
+    .nav-bar { display: none; }
+    .speaker-note { display: block; }
+  }
+
+  /* レスポンシブ */
+  @media (max-width: 1024px) {
+    .slide { padding: 40px 60px; }
+    h1 { font-size: 48px; }
+    h2 { font-size: 40px; }
+    .slide.big-number .number { font-size: 200px; }
+    .price-amount { font-size: 140px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- ============ Slide 1: Cover ============ -->
+  <section class="slide cover active">
+    <div class="slide-num">1 / 35</div>
+    <div class="caveat" style="font-size:32px;color:var(--orange);margin-bottom:16px;">経営者のためのAI活用ライブ</div>
+    <h1>社長の<span class="accent">30時間</span>を、<br>AIで取り戻す。</h1>
+    <p class="subtitle">プログラミング知識ゼロでもOK｜<br>"Claude Code" 実装ライブ</p>
+    <div class="speaker">
+      🎤 講師：桜木 健二（東京大学大学院 近山・田浦研究室 卒業）
+    </div>
+    <p class="speaker-note">▼ 開始の挨拶。タイトルだけでも30秒は止める。今日のゴールは "30時間" を取り戻す自分仕様のAIを設計する道筋を示すこと。</p>
+  </section>
+
+  <!-- ============ Slide 2: 今日の3つの約束 ============ -->
+  <section class="slide content">
+    <div class="slide-tag">本日のゴール</div>
+    <div class="slide-num">2 / 35</div>
+    <h2>120分で持ち帰れるもの</h2>
+    <div class="promise-list">
+      <div class="promise-item">
+        <div class="promise-num">1</div>
+        <div class="promise-text">
+          <h4>"ムダ時間" の正体がわかる</h4>
+          <p>あなたの月30時間がどこに消えているか</p>
+        </div>
+      </div>
+      <div class="promise-item">
+        <div class="promise-num">2</div>
+        <div class="promise-text">
+          <h4>明日からの "1歩目" が決まる</h4>
+          <p>3つのデモのうち、どれから始めるか</p>
+        </div>
+      </div>
+      <div class="promise-item">
+        <div class="promise-num">3</div>
+        <div class="promise-text">
+          <h4>"うちの場合は?" にその場で答える</h4>
+          <p>個別質問をチャット・音声で受け付けます</p>
+        </div>
+      </div>
+    </div>
+    <p class="speaker-note">▼ 期待値設定。具体的な数字（30時間）を出す。「持ち帰れる」を強調して投資の見返り感を出す。</p>
+  </section>
+
+  <!-- ============ Slide 3: 今日やらないこと ============ -->
+  <section class="slide content">
+    <div class="slide-tag">念のため</div>
+    <div class="slide-num">3 / 35</div>
+    <h2>今日やらないこと</h2>
+    <ul style="font-size:32px;line-height:2;margin-top:32px;flex:1;">
+      <li>❌ AIの未来予測（抽象論）</li>
+      <li>❌ プログラミングの技術論</li>
+      <li>❌ 売り込み（最後の20分以外は一切ナシ）</li>
+    </ul>
+    <blockquote style="margin-top:auto;font-size:24px;">
+      残り100分は <span class="marker">実際にClaude Codeを動かして</span>、業務がどう消えるかを目の前でお見せします。
+    </blockquote>
+    <p class="speaker-note">▼ ここで安心感を作る。「売り込まれる感」を先に消す。最後の20分の存在は明示。</p>
+  </section>
+
+  <!-- ============ Slide 4: 自己紹介 ============ -->
+  <section class="slide content" style="background:var(--ink);color:white;padding-top:80px;">
+    <div class="slide-tag" style="color:var(--yellow);">自己紹介</div>
+    <div class="slide-num" style="color:rgba(255,255,255,0.5);">4 / 35</div>
+    <h2 style="color:white;margin-bottom:32px;">桜木 健二</h2>
+    <div style="font-size:24px;line-height:2;color:rgba(255,255,255,0.95);font-weight:500;">
+      <p>📚 <strong style="color:var(--yellow);">東京大学大学院 工学系研究科 近山・田浦研究室</strong> 卒業</p>
+      <p>🧠 日本のAI研究の先達 <strong style="color:var(--yellow);">近山隆教授</strong> のもと、AI研究に従事</p>
+      <p>💼 現在は経営戦略に直結する <strong style="color:var(--yellow);">AI導入支援・コンサルティング</strong></p>
+      <p>🎤 <strong style="color:var(--yellow);">プロの塾講師経験</strong> を活かした分かりやすい語り口</p>
+    </div>
+    <blockquote style="background:rgba(255,255,255,0.1);border-left-color:var(--yellow);color:white;margin-top:32px;font-size:22px;">
+      「難しいことをやさしく、やさしいことをふかく」<br>
+      ITが苦手な社長にも腑に落ちる伝え方を心がけています。
+    </blockquote>
+    <p class="speaker-note" style="color:rgba(255,255,255,0.5);">▼ 信頼形成。"東大近山研" "塾講師" の組み合わせで、技術と分かりやすさの両立を訴求。</p>
+  </section>
+
+  <!-- ============ Slide 5: Section Divider Part 1 ============ -->
+  <section class="slide section-divider">
+    <div class="slide-tag">PART 1</div>
+    <div class="slide-num" style="color:rgba(255,255,255,0.5);">5 / 35</div>
+    <h2>痛みの掘り下げ</h2>
+    <p class="lead">あなたの時間はどこに消えているのか</p>
+    <p class="speaker-note">▼ セクション切替。雰囲気を変えて集中させる。</p>
+  </section>
+
+  <!-- ============ Slide 6: 質問 ============ -->
+  <section class="slide question">
+    <div class="slide-num">6 / 35</div>
+    <div class="question-mark">?</div>
+    <h2>先週1週間、<br>「これ、自分じゃなくてもいい仕事だな」<br>と思いながらやっていた業務は<br><span class="marker">何分</span>ありましたか？</h2>
+    <p class="speaker-note">▼ 沈黙を作る。10秒待つ。チャットに書いてもらう。「30分?」「1時間?」と例示してもよい。</p>
+  </section>
+
+  <!-- ============ Slide 7: 30時間 ============ -->
+  <section class="slide big-number">
+    <div class="slide-num">7 / 35</div>
+    <p class="pre-text">平均的な経営者で...</p>
+    <div class="number">30</div>
+    <p class="post-text"><strong>時間／月</strong>。年間で営業日<strong>2か月分</strong>が消えています。</p>
+    <p class="speaker-note">▼ ここが最初の "おっ" の瞬間。数字を声に出して読む。</p>
+  </section>
+
+  <!-- ============ Slide 8: 4つの罠 ============ -->
+  <section class="slide content">
+    <div class="slide-tag">問題の正体</div>
+    <div class="slide-num">8 / 35</div>
+    <h2>時間を奪う <span class="marker-orange">4つの罠</span></h2>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="emoji">📝</div>
+        <div>
+          <h4>議事録づくり</h4>
+          <span class="time-badge">月10時間</span>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="emoji">📰</div>
+        <div>
+          <h4>朝のニュース</h4>
+          <span class="time-badge">月7.5時間</span>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="emoji">🔍</div>
+        <div>
+          <h4>"あれ、何だっけ" 検索</h4>
+          <span class="time-badge">月5〜8時間</span>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="emoji">📱</div>
+        <div>
+          <h4>SNS発信の停滞</h4>
+          <span class="time-badge">機会損失大</span>
+        </div>
+      </div>
+    </div>
+    <p class="speaker-note">▼ 共感を作る。各カードに5秒ずつ触れて、痛みを言語化する。</p>
+  </section>
+
+  <!-- ============ Slide 9: チャット呼びかけ ============ -->
+  <section class="slide chat-prompt">
+    <div class="slide-num" style="color:rgba(255,255,255,0.5);">9 / 35</div>
+    <div class="icon">💬</div>
+    <h2>当てはまる罠の番号、<br>チャットに書いてください！</h2>
+    <p>全部該当する方は「全部」と書いてください 😊</p>
+    <p class="speaker-note">▼ インタラクション。30秒待つ。チャットを読み上げて共感を可視化する。</p>
+  </section>
+
+  <!-- ============ Slide 10: これまでの3選択肢 ============ -->
+  <section class="slide content">
+    <div class="slide-tag">解決策</div>
+    <div class="slide-num">10 / 35</div>
+    <h2>これまでの選択肢、<br><span class="marker">3つしか</span>なかった</h2>
+    <div class="four-cols" style="margin-top:48px;">
+      <div class="col-card struck">
+        <div class="emoji">👔</div>
+        <div class="col-title">秘書を雇う</div>
+        <div class="col-desc">月30〜50万円<br>教育リスク</div>
+      </div>
+      <div class="col-card struck">
+        <div class="emoji">🚫</div>
+        <div class="col-title">業務をやめる</div>
+        <div class="col-desc">実際にはやめられない</div>
+      </div>
+      <div class="col-card struck">
+        <div class="emoji">⏰</div>
+        <div class="col-title">早起きで頑張る</div>
+        <div class="col-desc">続かない</div>
+      </div>
+      <div class="col-card highlight">
+        <div class="emoji">🤖</div>
+        <div class="col-title">AIに任せる</div>
+        <div class="col-desc">給与ゼロ<br>24時間稼働</div>
+      </div>
+    </div>
+    <p class="speaker-note">▼ 既存3選択肢への共感→4つ目の登場。1〜3を順に "しんどいですよね" と確認してから4を見せる。</p>
+  </section>
+
+  <!-- ============ Slide 11: Claude Code 紹介 ============ -->
+  <section class="slide content">
+    <div class="slide-tag">主役の紹介</div>
+    <div class="slide-num">11 / 35</div>
+    <h2>今日の主役は<br><span class="marker-orange">Claude Code</span></h2>
+    <p class="lead">Anthropic社（米国）が作った、<br>"経営層に使える" と注目されているAIです。</p>
+    <div style="display:flex;gap:24px;margin-top:32px;flex:1;align-items:center;">
+      <div style="flex:1;background:var(--paper);padding:32px;border-radius:16px;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);">
+        <h3 style="color:var(--ink-soft);font-size:24px;">ChatGPT</h3>
+        <p style="font-size:18px;margin-top:12px;color:var(--ink-soft);">毎回 "ゼロから" の会話<br>記憶は引き継がれない<br>業務との連携が弱い</p>
+      </div>
+      <div style="font-size:60px;color:var(--orange);">VS</div>
+      <div style="flex:1;background:var(--orange);color:white;padding:32px;border-radius:16px;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);">
+        <h3 style="color:white;font-size:24px;">Claude Code</h3>
+        <p style="font-size:18px;margin-top:12px;color:rgba(255,255,255,0.95);">あなた専属に "育てられる"<br>会社・性格・好みを覚える<br>業務ファイルと連携</p>
+      </div>
+    </div>
+    <p class="speaker-note">▼ ChatGPT との違いを明示。「使ってみたけど続かなかった」経験者の納得を作る。</p>
+  </section>
+
+  <!-- ============ Slide 12: 3つの強み ============ -->
+  <section class="slide content">
+    <div class="slide-tag">3つの強み</div>
+    <div class="slide-num">12 / 35</div>
+    <h2>Claude Code が経営者に効く理由</h2>
+    <div class="three-cols">
+      <div class="feature-card">
+        <div class="emoji">🧠</div>
+        <h3>覚え続ける</h3>
+        <p>会社情報・性格・好みを<br>一度伝えれば毎回伝えなくていい</p>
+      </div>
+      <div class="feature-card">
+        <div class="emoji">🔌</div>
+        <h3>業務とつながる</h3>
+        <p>メール・カレンダー・社内資料と連携<br>本物の "実務" に効く</p>
+      </div>
+      <div class="feature-card">
+        <div class="emoji">🎯</div>
+        <h3>得意技をしこめる</h3>
+        <p>繰り返す業務は "型" として登録<br>毎回同じ品質で動く</p>
+      </div>
+    </div>
+    <p class="speaker-note">▼ 3つの特徴。それぞれを15秒ずつ。詳細はデモで見せると伝える。</p>
+  </section>
+
+  <!-- ============ Slide 13: プログラミング知識不要 ============ -->
+  <section class="slide content" style="justify-content:center;text-align:center;align-items:center;">
+    <div class="slide-num">13 / 35</div>
+    <div style="font-size:80px;margin-bottom:24px;">💡</div>
+    <h2 style="font-size:48px;margin-bottom:32px;">必要なのは<br>プログラミング知識<span style="color:var(--red);">ではない</span></h2>
+    <div style="background:var(--bg-warm);padding:48px;border-radius:24px;border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);max-width:800px;">
+      <p style="font-size:36px;font-weight:900;color:var(--ink);">必要なのは、<br><span class="marker">部下に指示を出すスキル</span>。</p>
+      <p style="font-size:24px;color:var(--ink-soft);margin-top:16px;">つまり、経営者の本業そのもの。</p>
+    </div>
+    <p class="speaker-note">▼ 最重要メッセージ。ITに弱い経営者の心理ハードルを破壊する。間を取って言う。</p>
+  </section>
+
+  <!-- ============ Slide 14: Section Divider Part 2 ============ -->
+  <section class="slide section-divider">
+    <div class="slide-tag">PART 2</div>
+    <div class="slide-num" style="color:rgba(255,255,255,0.5);">14 / 35</div>
+    <h2>ライブ実演</h2>
+    <p class="lead">あなたの仕事が、こう変わります</p>
+    <p class="speaker-note">▼ メインパート開始。ここから60分。</p>
+  </section>
+
+  <!-- ============ Slide 15: 3デモ概要 ============ -->
+  <section class="slide content">
+    <div class="slide-tag">これから60分で</div>
+    <div class="slide-num">15 / 35</div>
+    <h2>3つの実演をお見せします</h2>
+    <table style="margin-top:32px;font-size:24px;">
+      <thead>
+        <tr><th>#</th><th>テーマ</th><th>Before</th><th>After</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--orange);font-size:32px;">1</strong></td>
+          <td>議事録から決定事項を抽出</td>
+          <td>30分</td>
+          <td><strong style="color:var(--green-deep);">90秒</strong></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--orange);font-size:32px;">2</strong></td>
+          <td>朝のニュースを要約</td>
+          <td>20分</td>
+          <td><strong style="color:var(--green-deep);">1分</strong></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--orange);font-size:32px;">3</strong></td>
+          <td>動画→記事＋SNSに展開</td>
+          <td>2.5時間</td>
+          <td><strong style="color:var(--green-deep);">5分</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <blockquote style="margin-top:32px;font-size:20px;">
+      💡 大事なのは：<span class="marker">画面の中で起きていることが、皆さんも明日できる</span> ということ。
+    </blockquote>
+    <p class="speaker-note">▼ 3つのデモ概要。Before/Afterの数字を声に出して読み上げる。</p>
+  </section>
+
+  <!-- ============ Slide 16: Demo 1 タイトル ============ -->
+  <section class="slide content">
+    <div class="slide-tag">DEMO 01</div>
+    <div class="slide-num">16 / 35</div>
+    <h2>議事録づくり、<br>ボタン1つで終わります。</h2>
+    <p class="lead" style="margin-top:32px;">これから、30分会議の文字起こし（約8000字）を、<br>Claude Codeで90秒に変えます。</p>
+    <div style="margin-top:auto;background:var(--bg-warm);padding:32px;border-radius:16px;border:3px solid var(--ink);text-align:center;">
+      <p style="font-size:28px;font-weight:900;">▼ 画面共有でライブ実演 ▼</p>
+    </div>
+    <p class="speaker-note">▼ ここで画面を Claude Code に切替。事前に役員会議事録サンプルを開いておく。</p>
+  </section>
+
+  <!-- ============ Slide 17: Demo 1 Before/After ============ -->
+  <section class="slide content">
+    <div class="slide-tag">DEMO 01｜結果</div>
+    <div class="slide-num">17 / 35</div>
+    <h2>議事録要約：30分 → 90秒</h2>
+    <div class="ba-grid">
+      <div class="ba-side ba-before">
+        <span class="ba-label">これまで</span>
+        <div class="ba-time">30分<small>／回</small></div>
+        <ul>
+          <li>録画を見直して文字起こし</li>
+          <li>決定事項を箇条書きに</li>
+          <li>誰が何やるか整理</li>
+          <li>関係者にメール送信</li>
+        </ul>
+      </div>
+      <div class="ba-arrow">→</div>
+      <div class="ba-side ba-after">
+        <span class="ba-label">これから</span>
+        <div class="ba-time">90秒<small>／回</small></div>
+        <ul>
+          <li>録画ファイルを渡すだけ</li>
+          <li>決定事項3点を自動抽出</li>
+          <li>担当・期限つきの宿題リスト</li>
+          <li>"あなたが次に判断すべきこと" まで</li>
+        </ul>
+      </div>
+    </div>
+    <p class="speaker-note">▼ 注目！ "あなたが次に判断すべきこと" は経営者専用に動くAIの証拠。</p>
+  </section>
+
+  <!-- ============ Slide 18: Demo 1 Result ============ -->
+  <section class="slide big-number">
+    <div class="slide-num">18 / 35</div>
+    <p class="pre-text">これだけで...</p>
+    <div class="number" style="font-size:200px;">10<small style="font-size:0.4em;">時間</small></div>
+    <p class="post-text">が <strong>毎月</strong>、消えました。</p>
+    <p class="speaker-note">▼ 月の効果を可視化。次のデモへの期待を高める。</p>
+  </section>
+
+  <!-- ============ Slide 19: チャット呼びかけ Demo 1 ============ -->
+  <section class="slide chat-prompt">
+    <div class="slide-num" style="color:rgba(255,255,255,0.5);">19 / 35</div>
+    <div class="icon">💬</div>
+    <h2>議事録、<br>あなたの会社なら<br><span style="color:var(--yellow);">どんな項目</span>が欲しいですか？</h2>
+    <p>例：「論点として残ったもの」「役員別のアクション」など</p>
+    <p class="speaker-note">▼ 顧客のリクエストをその場でカスタマイズ実演。"自分仕様にできる" を実感させる。</p>
+  </section>
+
+  <!-- ============ Slide 20: Demo 2 タイトル ============ -->
+  <section class="slide content">
+    <div class="slide-tag">DEMO 02</div>
+    <div class="slide-num">20 / 35</div>
+    <h2>朝のニュース、<br>1分で終わります。</h2>
+    <p class="lead" style="margin-top:32px;">毎朝15〜20分かけているニュースチェックを、<br>"自社目線" の1分ブリーフに変えます。</p>
+    <div style="margin-top:auto;background:var(--bg-warm);padding:32px;border-radius:16px;border:3px solid var(--ink);text-align:center;">
+      <p style="font-size:28px;font-weight:900;">▼ 画面共有でライブ実演 ▼</p>
+    </div>
+    <p class="speaker-note">▼ Claude Code 画面に切替。事前にニュースURL5本を用意。</p>
+  </section>
+
+  <!-- ============ Slide 21: Demo 2 Before/After ============ -->
+  <section class="slide content">
+    <div class="slide-tag">DEMO 02｜結果</div>
+    <div class="slide-num">21 / 35</div>
+    <h2>朝のニュース：20分 → 1分</h2>
+    <div class="ba-grid">
+      <div class="ba-side ba-before">
+        <span class="ba-label">これまで</span>
+        <div class="ba-time">15〜20分<small>／日</small></div>
+        <ul>
+          <li>ニュースアプリを開く</li>
+          <li>Slackの未読を流し読み</li>
+          <li>業界メディアを巡回</li>
+          <li>頭が散らかったまま朝MTG</li>
+        </ul>
+      </div>
+      <div class="ba-arrow">→</div>
+      <div class="ba-side ba-after">
+        <span class="ba-label">これから</span>
+        <div class="ba-time">1分<small>／日</small></div>
+        <ul>
+          <li>3行で今朝のサマリ</li>
+          <li>競合の動きと自社への影響</li>
+          <li>今日の判断に効く1件</li>
+          <li>判断モードで朝MTGへ</li>
+        </ul>
+      </div>
+    </div>
+    <p class="speaker-note">▼ "ニュース要約" ではなく "経営者目線の影響分析" がポイント。</p>
+  </section>
+
+  <!-- ============ Slide 22: Demo 2 Result ============ -->
+  <section class="slide big-number">
+    <div class="slide-num">22 / 35</div>
+    <p class="pre-text">さらに...</p>
+    <div class="number" style="font-size:200px;">7.5<small style="font-size:0.4em;">時間</small></div>
+    <p class="post-text">が消えます。<br>合計 <strong>17.5時間／月</strong>。</p>
+    <p class="speaker-note">▼ 累積効果を可視化。"まだあと1つ" の期待を作る。</p>
+  </section>
+
+  <!-- ============ Slide 23: Demo 3 タイトル ============ -->
+  <section class="slide content">
+    <div class="slide-tag">DEMO 03</div>
+    <div class="slide-num">23 / 35</div>
+    <h2>動画やPodcastを、<br>5分で記事＋SNSに展開。</h2>
+    <p class="lead" style="margin-top:32px;">20分のPodcast音声から、<br>note記事・X投稿・LinkedIn・社内サマリを一気に生成します。</p>
+    <div style="margin-top:auto;background:var(--bg-warm);padding:32px;border-radius:16px;border:3px solid var(--ink);text-align:center;">
+      <p style="font-size:28px;font-weight:900;">▼ 画面共有でライブ実演 ▼</p>
+    </div>
+    <p class="speaker-note">▼ 4種類同時生成を見せる。"自分の文体" で出ることを強調。</p>
+  </section>
+
+  <!-- ============ Slide 24: Demo 3 Before/After ============ -->
+  <section class="slide content">
+    <div class="slide-tag">DEMO 03｜結果</div>
+    <div class="slide-num">24 / 35</div>
+    <h2>SNS発信：2.5時間 → 5分</h2>
+    <div class="ba-grid">
+      <div class="ba-side ba-before">
+        <span class="ba-label">これまで</span>
+        <div class="ba-time">2〜3時間<small>／本</small></div>
+        <ul>
+          <li>文字起こしを読み返す</li>
+          <li>note記事に書き直す</li>
+          <li>X(Twitter)用に短く整える</li>
+          <li>気力切れて、結局やめる</li>
+        </ul>
+      </div>
+      <div class="ba-arrow">→</div>
+      <div class="ba-side ba-after">
+        <span class="ba-label">これから</span>
+        <div class="ba-time">5分<small>／本</small></div>
+        <ul>
+          <li>note記事（章立てつき）</li>
+          <li>X投稿スレッド</li>
+          <li>LinkedIn投稿</li>
+          <li>社内Slack共有用サマリ</li>
+        </ul>
+      </div>
+    </div>
+    <p class="speaker-note">▼ 過去投稿を読み込ませることで "あなたの文体" が出る点を強調。</p>
+  </section>
+
+  <!-- ============ Slide 25: 3デモのサマリ ============ -->
+  <section class="slide content" style="justify-content:center;text-align:center;align-items:center;">
+    <div class="slide-num">25 / 35</div>
+    <h2 style="font-size:60px;margin-bottom:48px;">3つだけで...</h2>
+    <div style="background:var(--ink);color:white;padding:64px;border-radius:24px;border:3px solid var(--ink);box-shadow:8px 8px 0 var(--orange);">
+      <p style="font-size:32px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:16px;">月に</p>
+      <div style="font-family:'Zen Maru Gothic';font-size:160px;font-weight:900;color:var(--yellow);line-height:1;text-shadow:6px 6px 0 var(--orange-deep);">20〜25</div>
+      <p style="font-size:36px;font-weight:900;color:white;margin-top:16px;">時間 取り戻せます</p>
+    </div>
+    <p class="speaker-note">▼ デモパートのクライマックス。間を取って強調。</p>
+  </section>
+
+  <!-- ============ Slide 26: 釣り方を教える ============ -->
+  <section class="slide content" style="justify-content:center;text-align:center;align-items:center;background:var(--bg-warm);">
+    <div class="slide-num">26 / 35</div>
+    <div style="font-size:80px;margin-bottom:24px;">🎣</div>
+    <h2 style="font-size:48px;margin-bottom:32px;">今日のデモは <span class="marker-orange">"魚を見せた" だけ</span></h2>
+    <p style="font-size:32px;font-weight:900;line-height:1.7;">本当に手に入れるべきは、<br><span class="marker">"釣り方"</span> です。</p>
+    <p style="font-size:22px;color:var(--ink-soft);margin-top:24px;">自分の業務に合わせて、<br>新しいスキルを <strong>自分で作れる状態</strong>。</p>
+    <p class="speaker-note">▼ ここでオファーへの伏線。"できるようになる人" になりませんか? のメッセージ。</p>
+  </section>
+
+  <!-- ============ Slide 27: Section Divider Part 3 ============ -->
+  <section class="slide section-divider">
+    <div class="slide-tag">PART 3</div>
+    <div class="slide-num" style="color:rgba(255,255,255,0.5);">27 / 35</div>
+    <h2>これから</h2>
+    <p class="lead">あなたが選べる3つの選択肢</p>
+    <p class="speaker-note">▼ オファーパート開始。20分。</p>
+  </section>
+
+  <!-- ============ Slide 28: 3つの選択肢 ============ -->
+  <section class="slide content">
+    <div class="slide-tag">今日からの</div>
+    <div class="slide-num">28 / 35</div>
+    <h2>3つの選択肢</h2>
+    <div style="display:flex;flex-direction:column;gap:16px;flex:1;justify-content:center;">
+      <div style="display:flex;align-items:center;gap:24px;background:var(--paper);padding:24px 32px;border-radius:16px;border:3px solid var(--ink);">
+        <div style="font-family:'Zen Maru Gothic';font-size:48px;color:var(--ink-mute);font-weight:900;">①</div>
+        <div style="flex:1;"><h4 style="font-size:24px;">何もしない</h4><p style="font-size:16px;color:var(--ink-soft);">来月も同じ業務に追われる</p></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;background:var(--paper);padding:24px 32px;border-radius:16px;border:3px solid var(--ink);">
+        <div style="font-family:'Zen Maru Gothic';font-size:48px;color:var(--ink-mute);font-weight:900;">②</div>
+        <div style="flex:1;"><h4 style="font-size:24px;">自分で頑張る</h4><p style="font-size:16px;color:var(--ink-soft);">公式ドキュメントで独学｜3〜6か月かかる</p></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;background:var(--orange);color:white;padding:24px 32px;border-radius:16px;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);">
+        <div style="font-family:'Zen Maru Gothic';font-size:48px;color:var(--yellow);font-weight:900;">③</div>
+        <div style="flex:1;"><h4 style="font-size:24px;">私と一緒にやる</h4><p style="font-size:16px;color:rgba(255,255,255,0.95);">1か月で実装｜月30時間を取り戻す</p></div>
+      </div>
+    </div>
+    <p class="speaker-note">▼ 選択肢を並べる。①②③を並べることで③を自然に推す。</p>
+  </section>
+
+  <!-- ============ Slide 29: AI顧問サービス ============ -->
+  <section class="slide content">
+    <div class="slide-tag">サービス紹介</div>
+    <div class="slide-num">29 / 35</div>
+    <h2>AIチーフ・オブ・スタッフ顧問</h2>
+    <p class="lead">経営者専属のAIを、1か月で立ち上げ・運用する伴走サービス</p>
+    <table style="margin-top:24px;">
+      <thead>
+        <tr><th>期間</th><th>サポート内容</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>第1月（ブースト期）</strong></td><td>週1ミーティング × 4回｜環境構築 → スキル3本 → 意思決定支援 → 発信</td></tr>
+        <tr><td><strong>第2〜3月（定着期）</strong></td><td>隔週ミーティング</td></tr>
+        <tr><td><strong>第4月以降（運用期）</strong></td><td>月1ミーティング</td></tr>
+        <tr><td><strong>全期間</strong></td><td>Slack質問無制限・月配布スキル・月1グループ会</td></tr>
+      </tbody>
+    </table>
+    <p class="speaker-note">▼ サービス内容を端的に。質問は後で受ける旨を伝えてサクッと進む。</p>
+  </section>
+
+  <!-- ============ Slide 30: 価格 ============ -->
+  <section class="slide pricing">
+    <div class="slide-tag">価格</div>
+    <div class="slide-num">30 / 35</div>
+    <p style="font-size:24px;font-weight:700;color:var(--ink-soft);">月額（最低3か月継続）</p>
+    <div class="price-amount">¥50,000<small>／月</small></div>
+    <div class="price-comparison">
+      <div class="price-comp-item">
+        <div class="label">秘書1人</div>
+        <div class="value" style="color:var(--ink-mute);">月30〜50万</div>
+      </div>
+      <div class="price-comp-item">
+        <div class="label">経営コーチ</div>
+        <div class="value" style="color:var(--ink-mute);">月10〜20万</div>
+      </div>
+      <div class="price-comp-item highlight">
+        <div class="label">本サービス</div>
+        <div class="value" style="color:var(--ink);">月5万</div>
+      </div>
+    </div>
+    <p style="margin-top:32px;font-size:22px;color:var(--ink-soft);">取り戻す月30時間 ÷ 月¥50,000 = <strong style="color:var(--orange-deep);">時間単価¥1,667</strong></p>
+    <p class="speaker-note">▼ 比較で安さを示す。3つの数字を順に読む。</p>
+  </section>
+
+  <!-- ============ Slide 31: 3か月一括割引 ============ -->
+  <section class="slide content" style="justify-content:center;text-align:center;align-items:center;">
+    <div class="slide-num">31 / 35</div>
+    <p style="font-size:24px;color:var(--ink-soft);margin-bottom:16px;">3か月一括前払いで...</p>
+    <div style="display:flex;align-items:center;gap:32px;justify-content:center;margin:32px 0;">
+      <div style="text-align:center;">
+        <p style="font-size:18px;color:var(--ink-mute);">通常</p>
+        <p style="font-family:'Zen Maru Gothic';font-size:64px;font-weight:900;text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:4px;">¥150,000</p>
+      </div>
+      <div style="font-size:80px;color:var(--orange);">→</div>
+      <div style="background:var(--orange);color:white;padding:32px 48px;border-radius:24px;border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);">
+        <p style="font-size:18px;color:var(--yellow);font-weight:900;">一括だと</p>
+        <p style="font-family:'Zen Maru Gothic';font-size:80px;font-weight:900;color:white;line-height:1;">¥138,000</p>
+      </div>
+    </div>
+    <p style="font-size:24px;color:var(--ink-soft);">実質 <strong style="color:var(--orange-deep);">¥12,000 引き</strong></p>
+    <p class="speaker-note">▼ 一括前払い割引。経営者は "得してる感" に弱い。</p>
+  </section>
+
+  <!-- ============ Slide 32: 個別診断 ============ -->
+  <section class="slide content" style="background:var(--bg-warm);">
+    <div class="slide-tag">本日限定オファー</div>
+    <div class="slide-num">32 / 35</div>
+    <h2 style="text-align:center;">15分の<br><span class="marker">無料個別診断</span> をプレゼント</h2>
+    <ul style="margin-top:32px;font-size:22px;flex:1;">
+      <li>✅ あなたの業務をヒアリング</li>
+      <li>✅ どのデモが一番効くかを一緒に見極める</li>
+      <li>✅ "あなたの業務でClaude Codeが何を自動化できるか" の即興デモ</li>
+      <li>✅ AI顧問が合うかどうか、率直にお話します（合わなければ「合わない」と言います）</li>
+    </ul>
+    <div style="background:var(--ink);color:white;padding:24px;border-radius:16px;text-align:center;font-size:22px;font-weight:900;margin-top:24px;">
+      ⚠️ 診断枠は <span style="color:var(--yellow);font-size:1.2em;">今月10名のみ</span>｜LP下部のフォームから予約
+    </div>
+    <p class="speaker-note">▼ 押し売りしない。"合わなければ合わないと言う" がポイント。</p>
+  </section>
+
+  <!-- ============ Slide 33: CTA ============ -->
+  <section class="slide cta">
+    <div class="slide-num" style="color:rgba(255,255,255,0.5);">33 / 35</div>
+    <div style="font-size:120px;margin-bottom:24px;">📋</div>
+    <h2>個別診断のお申し込み</h2>
+    <p>LP下部の申込フォームから、1分で予約できます</p>
+    <div class="cta-box">👉 [短縮URL or QRコード]</div>
+    <p style="margin-top:24px;font-size:20px;">「とりあえず話だけ聞きたい」で全く構いません</p>
+    <p class="speaker-note">▼ QRコードを大きく表示。スマホで撮ってもらう。</p>
+  </section>
+
+  <!-- ============ Slide 34: 最後に ============ -->
+  <section class="slide content" style="justify-content:center;text-align:center;align-items:center;">
+    <div class="slide-num">34 / 35</div>
+    <h2 style="font-size:48px;margin-bottom:32px;">最後にひとつだけ</h2>
+    <blockquote style="font-size:26px;text-align:left;background:var(--bg-warm);max-width:800px;line-height:2;">
+      今日参加された時点で、皆さんはすでに<br>
+      <span class="marker">上位5%の経営者</span> です。<br><br>
+      AIに対して "知りたい" "試したい" と<br>
+      能動的に動ける経営者は、まだ全体のごく一部です。
+    </blockquote>
+    <p style="font-size:24px;color:var(--ink-soft);margin-top:32px;">
+      30時間を取り戻すか、<br>
+      来月も議事録に追われるか。<br>
+      <strong style="color:var(--ink);">決められるのは、社長、あなただけです。</strong>
+    </p>
+    <p class="speaker-note">▼ 感情的な締め。"上位5%" の認識で誇りを与える。</p>
+  </section>
+
+  <!-- ============ Slide 35: ありがとうございました ============ -->
+  <section class="slide cta" style="background:var(--ink);">
+    <div class="slide-num" style="color:rgba(255,255,255,0.5);">35 / 35</div>
+    <div style="font-size:80px;margin-bottom:24px;">🙏</div>
+    <h2 style="font-size:80px;color:var(--yellow);">ありがとうございました</h2>
+    <p style="margin-top:32px;font-size:28px;color:white;">桜木 健二｜AI駆動経営ラボ 主宰</p>
+    <p style="margin-top:16px;font-size:18px;color:rgba(255,255,255,0.7);">
+      note：[URL]｜X：[URL]｜お問い合わせ：[email]
+    </p>
+    <p class="speaker-note">▼ 感謝で終わる。Q&Aへ移行する場合は次のスライドへ。</p>
+  </section>
+
+</div>
+
+<!-- ============ Navigation ============ -->
+<div class="nav-bar">
+  <button class="nav-btn" onclick="prevSlide()">←</button>
+  <div class="nav-counter" id="counter">1 / 35</div>
+  <button class="nav-btn" onclick="nextSlide()">→</button>
+  <button class="nav-btn" onclick="toggleNotes()" title="スピーカーノート切替（Sキー）" style="font-size:14px;">📝</button>
+  <button class="nav-btn" onclick="toggleFullscreen()" title="フルスクリーン（Fキー）" style="font-size:14px;">⛶</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let currentSlide = 0;
+  const total = slides.length;
+
+  function showSlide(n) {
+    slides.forEach(s => s.classList.remove('active'));
+    currentSlide = (n + total) % total;
+    slides[currentSlide].classList.add('active');
+    document.getElementById('counter').textContent = `${currentSlide + 1} / ${total}`;
+  }
+
+  function nextSlide() { showSlide(currentSlide + 1); }
+  function prevSlide() { showSlide(currentSlide - 1); }
+
+  function toggleNotes() {
+    document.body.classList.toggle('show-notes');
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  // キーボード操作
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+    else if (e.key === 's' || e.key === 'S') toggleNotes();
+    else if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+    else if (e.key === 'Home') showSlide(0);
+    else if (e.key === 'End') showSlide(total - 1);
+  });
+
+  // クリック操作（左右半分でナビゲート）
+  document.querySelector('.deck').addEventListener('click', e => {
+    if (e.target.closest('.nav-bar')) return;
+    const x = e.clientX;
+    const w = window.innerWidth;
+    if (x < w / 2) prevSlide();
+    else nextSlide();
+  });
+</script>
+
+</body>
+</html>
